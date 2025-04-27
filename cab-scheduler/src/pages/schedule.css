@@ -1,0 +1,21 @@
+.schedule-page {
+    min-height: calc(100vh - 80px); /* full screen minus navbar height */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 3rem;
+    background-color: #f9f9f9;
+}
+
+.scheduler-container {
+    max-width: 600px;
+    width: 100%;
+}
+
+.scheduler-form {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-top: 2rem;
+}
