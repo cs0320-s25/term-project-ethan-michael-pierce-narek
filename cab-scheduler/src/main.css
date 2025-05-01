@@ -1,0 +1,95 @@
+/* Reset everything */
+html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #111;
+}
+
+a {
+    text-decoration: none;
+    color: #333;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+}
+
+nav a {
+    margin-right: 1.5rem;
+    font-weight: 500;
+    color: #666;
+}
+
+nav a:hover {
+    color: #111;
+}
+
+h1, h2, h3 {
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+}
+
+.page-body {
+    flex: 1;
+    padding: 3rem 6rem;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* stick form near top, not dead center */
+    background-color: #f9f9f9;
+}
+
+form {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+input, select {
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+button {
+    padding: 0.8rem 1.2rem;
+    margin-top: 1rem;
+    background-color: #111;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #333;
+}
+
+/* Calendar Grid */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.calendar-day {
+    background: #fff;
+    padding: 1rem;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
