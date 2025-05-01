@@ -4,9 +4,17 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Preferences from "./pages/Preferences";
 import Schedule from "./pages/Schedule";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 
-function App() {
-    return (
+
+export default function App() {
+  return (
+    <header>
+      <SignedOut>
+        <SignInButton />
+      </SignedOut>
+      <SignedIn>
+        <UserButton />
         <Router>
             <nav style={{ padding: "1rem", borderBottom: "1px solid gray" }}>
                 <Link to="/" style={{ marginRight: "1rem" }}>Home</Link>
@@ -21,7 +29,8 @@ function App() {
                 <Route path="/schedule" element={<Schedule />} />
             </Routes>
         </Router>
-    );
+      </SignedIn>
+    </header>
+  );
 }
 
-export default App;
