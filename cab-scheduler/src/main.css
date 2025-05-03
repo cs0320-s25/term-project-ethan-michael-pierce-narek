@@ -1,81 +1,153 @@
-/* Reset everything */
+/* Reset & Layout Base */
 html, body, #root {
     height: 100%;
+    width: 100%;
     margin: 0;
     padding: 0;
     font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     background-color: #f9f9f9;
     color: #111;
+    box-sizing: border-box;
 }
 
-a {
-    text-decoration: none;
-    color: #333;
+/* Utility Layout Wrapper */
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
+/* Navigation Bar */
 nav {
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /* <-- centers the links */
     align-items: center;
-    padding: 1rem 2rem;
+    padding: 1.2rem 2rem;
     background-color: #fff;
     border-bottom: 1px solid #eee;
+    flex-shrink: 0;
+    font-size: 2rem;
+    gap: 25rem;
 }
 
 nav a {
-    margin-right: 1.5rem;
+    position: relative;
     font-weight: 500;
-    color: #666;
+    color: #444;
+    padding: 0.6rem 1rem;
+    border-radius: 20px;
+    transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 nav a:hover {
-    color: #111;
+    background-color: rgba(255, 50, 50, 0.1);
+    color: #c0392b;
 }
 
+nav a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+}
+
+/* Typography */
 h1, h2, h3 {
     font-weight: 600;
     margin: 0 0 1rem 0;
+    color: #222;
 }
 
+/* Main Content Area */
 .page-body {
     flex: 1;
-    padding: 3rem 6rem;
+    padding: 4rem 6vw;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* stick form near top, not dead center */
-    background-color: #f9f9f9;
-}
-
-form {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-input, select {
-    padding: 0.5rem;
-    margin-top: 0.5rem;
+    align-items: flex-start;
     width: 100%;
-    border: 1px solid #ddd;
-    border-radius: 4px;
 }
 
-button {
-    padding: 0.8rem 1.2rem;
-    margin-top: 1rem;
-    background-color: #111;
+/* Profile Container */
+.profile-container {
+    width: 100%;
+    max-width: 95%;
+    padding: 2.5rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    transition: box-shadow 0.3s ease;
+}
+
+.profile-container:hover {
+    box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+}
+
+/* Section Titles */
+.section-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #444;
+}
+
+.form-select, .form-input {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+    transition: border-color 0.2s ease;
+}
+
+.form-select:focus, .form-input:focus {
+    outline: none;
+    border-color: #888;
+}
+
+/* Course Card */
+.course-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f4f4f4;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+}
+
+/* Remove Button */
+.remove-btn {
+    background-color: #e74c3c;
     color: white;
     border: none;
-    border-radius: 4px;
+    padding: 0.5rem 0.9rem;
+    border-radius: 5px;
+    font-size: 0.9rem;
     cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
-button:hover {
-    background-color: #333;
+.remove-btn:hover {
+    background-color: #c0392b;
 }
 
-/* Calendar Grid */
+/* Calendar Grid (if needed) */
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
