@@ -195,65 +195,97 @@ function Profile() {
   if (isLoading) return <div style={{ padding: "2rem" }}><h1>Profile Setup</h1><p>Loading...</p></div>;
 
   return (
-      <div className="profile-container">
-        <h1 className="section-title">Profile Setup</h1>
+      <div className="profile-page">
+        <h1 className="profile-title">Profile Setup</h1>
 
-        <h3 className="section-title">Preferences</h3>
-        <div className="form-group">
-          <label className="form-label">Preferred Class Time:</label>
-          <select className="form-select" value={preferredTime} onChange={(e) => setPreferredTime(e.target.value)}>
-            <option value="">-- Select Time --</option>
-            <option value="Morning">Morning</option>
-            <option value="Afternoon">Afternoon</option>
-            <option value="Evening">Evening</option>
-          </select>
-        </div>
+        <div className="profile-container">
+          <h3 className="section-title">Preferences</h3>
 
-        <div className="form-group">
-          <label className="form-label">Preferred Modality:</label>
-          <select className="form-select" value={modality} onChange={(e) => setModality(e.target.value)}>
-            <option value="">-- Select Modality --</option>
-            <option value="In Person">In Person</option>
-            <option value="Hybrid">Hybrid</option>
-            <option value="Online">Online</option>
-          </select>
-        </div>
+          <div className="form-group">
+            <label className="form-label">Preferred Class Time:</label>
+            <select
+                className="form-select"
+                value={preferredTime}
+                onChange={(e) => setPreferredTime(e.target.value)}
+            >
+              <option value="">-- Select Time --</option>
+              <option value="Morning">Morning</option>
+              <option value="Afternoon">Afternoon</option>
+              <option value="Evening">Evening</option>
+            </select>
+          </div>
 
-        <h3 className="section-title">Completed Courses</h3>
-        <div className="form-group">
-          <label className="form-label">Select Department:</label>
-          <select className="form-select" value={selectedDepartment} onChange={handleDepartmentChange}>
-            <option value="">-- Select Department --</option>
-            {departmentList.map((dept) => <option key={dept} value={dept}>{dept}</option>)}
-          </select>
-        </div>
+          <div className="form-group">
+            <label className="form-label">Preferred Modality:</label>
+            <select
+                className="form-select"
+                value={modality}
+                onChange={(e) => setModality(e.target.value)}
+            >
+              <option value="">-- Select Modality --</option>
+              <option value="In Person">In Person</option>
+              <option value="Hybrid">Hybrid</option>
+              <option value="Online">Online</option>
+            </select>
+          </div>
 
-        {selectedDepartment && (
-            <div className="form-group">
-              <label className="form-label">Select Course:</label>
-              <select className="form-select" value={selectedCourse} onChange={handleCourseSelect} disabled={coursesLoading}>
-                <option value="">-- Select Course --</option>
-                {departmentCourses[selectedDepartment]?.map((course) => (
-                    <option key={course.id} value={course.code}>
-                      {course.code}: {course.title}
-                    </option>
-                ))}
-              </select>
-            </div>
-        )}
+          <h3 className="section-title">Completed Courses</h3>
 
-        {selectedCoursesList.length > 0 ? (
-            <ul style={{ listStyle: "none", padding: 0 }}>
-              {selectedCoursesList.map((course) => (
-                  <li className="course-card" key={course.id}>
-                    <span><strong>{course.code}</strong>: {course.title}</span>
-                    <button className="remove-btn" onClick={() => removeCourse(course.id)}>Remove</button>
-                  </li>
+          <div className="form-group">
+            <label className="form-label">Select Department:</label>
+            <select
+                className="form-select"
+                value={selectedDepartment}
+                onChange={handleDepartmentChange}
+            >
+              <option value="">-- Select Department --</option>
+              {departmentList.map((dept) => (
+                  <option key={dept} value={dept}>
+                    {dept}
+                  </option>
               ))}
-            </ul>
-        ) : (
-            <p>No courses selected yet</p>
-        )}
+            </select>
+          </div>
+
+          {selectedDepartment && (
+              <div className="form-group">
+                <label className="form-label">Select Course:</label>
+                <select
+                    className="form-select"
+                    value={selectedCourse}
+                    onChange={handleCourseSelect}
+                    disabled={coursesLoading}
+                >
+                  <option value="">-- Select Course --</option>
+                  {departmentCourses[selectedDepartment]?.map((course) => (
+                      <option key={course.id} value={course.code}>
+                        {course.code}: {course.title}
+                      </option>
+                  ))}
+                </select>
+              </div>
+          )}
+
+          {selectedCoursesList.length > 0 ? (
+              <ul style={{ listStyle: "none", padding: 0 }}>
+                {selectedCoursesList.map((course) => (
+                    <li className="course-card" key={course.id}>
+              <span>
+                <strong>{course.code}</strong>: {course.title}
+              </span>
+                      <button
+                          className="remove-btn"
+                          onClick={() => removeCourse(course.id)}
+                      >
+                        Remove
+                      </button>
+                    </li>
+                ))}
+              </ul>
+          ) : (
+              <p>No courses selected yet</p>
+          )}
+        </div>
       </div>
   );
 }
