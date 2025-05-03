@@ -1,14 +1,12 @@
-
 import static spark.Spark.after;
 import static spark.Spark.options;
 
 import Handlers.FilterHandler;
+import Handlers.GenerateScheduleHandler;
 import spark.Spark;
 
 /**
- * The Main class of our project. This is where execution begins. Note: For this first sprint, you
- * will not be running the parser through main(), but rather interacting with the parser through
- * extensive testing!
+ * The Main class of our project. This is where execution begins.
  */
 public final class Server {
 
@@ -32,12 +30,14 @@ public final class Server {
       return "OK";
     });
 
-
-    // csv endpoints
+    // Course filtering endpoint
     Spark.get("/filter", new FilterHandler());
+
+    // Schedule generation endpoint
+    Spark.post("/generate", new GenerateScheduleHandler());
+
     Spark.init();
     Spark.awaitInitialization();
     System.out.println("Server started at http://localhost:" + port);
   }
 }
-
