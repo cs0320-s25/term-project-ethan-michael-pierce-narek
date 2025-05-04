@@ -8,85 +8,19 @@ interface Course {
   id: string;
 }
 
+interface UserMetadata {
+  courses?: Course[];
+  preferredTime?: string;
+  modality?: string;
+}
+
 // Predefined department list to avoid dynamic fetching
 const departmentList = [
-  "AFRI",
-  "AMST",
-  "ANTH",
-  "APMA",
-  "ARAB",
-  "ARCH",
-  "ARTS",
-  "ASYR",
-  "BHDS",
-  "BIOL",
-  "CHEM",
-  "CHIN",
-  "CLAS",
-  "CLPS",
-  "COLT",
-  "CSCI",
-  "DATA",
-  "EAST",
-  "ECON",
-  "EDUC",
-  "EEPS",
-  "EGYT",
-  "EINT",
-  "EMOW",
-  "ENGL",
-  "ENGN",
-  "ENVS",
-  "ETHN",
-  "FREN",
-  "GNSS",
-  "GPHP",
-  "GREK",
-  "GRMN",
-  "HCL",
-  "HEBR",
-  "HIAA",
-  "HISP",
-  "HMAN",
-  "HNDI",
-  "IAPA",
-  "ITAL",
-  "JAPN",
-  "JUDS",
-  "KREA",
-  "LACA",
-  "LANG",
-  "LATN",
-  "LING",
-  "LITR",
-  "MATH",
-  "MCM",
-  "MDVL",
-  "MED",
-  "MES",
-  "MGRK",
-  "MPA",
-  "MUSC",
-  "NEUR",
-  "PHIL",
-  "PHP",
-  "PHYS",
-  "POLS",
-  "PRSN",
-  "RELS",
-  "RUSS",
-  "SANS",
-  "SAST",
-  "SIGN",
-  "SLAV",
-  "SOC",
-  "STS",
-  "TAPS",
-  "TKSH",
-  "UNIV",
-  "URBN",
-  "VISA",
-  "YORU",
+  "AFRI","AMST","ANTH","APMA","ARAB","ARCH","ARTS","ASYR","BHDS","BIOL","CHEM","CHIN","CLAS","CLPS","COLT","CSCI","DATA","EAST",
+  "ECON","EDUC","EEPS","EGYT","EINT","EMOW","ENGL","ENGN","ENVS","ETHN","FREN","GNSS","GPHP","GREK","GRMN","HCL","HEBR","HIAA","HISP",
+  "HMAN","HNDI","IAPA","ITAL","JAPN","JUDS","KREA","LACA","LANG","LATN","LING","LITR","MATH","MCM","MDVL","MED","MES","MGRK","MPA",
+  "MUSC","NEUR","PHIL","PHP","PHYS","POLS","PRSN","RELS","RUSS","SANS","SAST","SIGN","SLAV","SOC","STS","TAPS","TKSH","UNIV","URBN",
+  "VISA","YORU",
 ];
 
 function Profile() {
@@ -107,11 +41,13 @@ function Profile() {
     const loadData = async () => {
       if (user) {
         try {
-          const metadata = user.unsafeMetadata;
-          const courses = (metadata.courses as Course[]) || [];
+          const metadata = user.unsafeMetadata as UserMetadata;
+          const courses = metadata.courses || [];
           const coursesWithIds = courses.map((course) => ({
             ...course,
-            id: course.id || `${course.code}-${Math.random().toString(36).substr(2, 9)}`,
+            id:
+              course.id ||
+              `${course.code}-${Math.random().toString(36).substr(2, 9)}`,
           }));
           setSelectedCoursesList(coursesWithIds);
           setPreferredTime(metadata.preferredTime || "");
