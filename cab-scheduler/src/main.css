@@ -146,7 +146,7 @@ h1, h2, h3 {
 
 /* Remove Button */
 .remove-btn {
-    background-color: #e74c3c;
+    background-color: #4376c9;
     color: white;
     border: none;
     padding: 0.5rem 0.9rem;
@@ -249,10 +249,32 @@ h1, h2, h3 {
 
 .profile-page {
     display: flex;
+    
     flex-direction: column;
     align-items: center;
     padding: 4rem 2rem;
     animation: fadeIn 0.5s ease-in-out;
+}
+
+.courses-container {
+    display: flex;
+    gap: 2rem;
+    width: 100%;
+    margin-top: 1.5rem;
+}
+
+.course-box {
+    flex: 1;
+    background-color: #e6f2ff; /* Light blue background */
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.course-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
 .profile-title {
