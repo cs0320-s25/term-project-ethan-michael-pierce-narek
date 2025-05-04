@@ -143,7 +143,6 @@ public class GenerateScheduleHandler implements Route {
     } catch (Exception e) {
       e.printStackTrace();
       response.status(500);
-
       Map<String, String> errorResponse = new HashMap<>();
       errorResponse.put("success", "false");
       errorResponse.put("error", e.getMessage());
