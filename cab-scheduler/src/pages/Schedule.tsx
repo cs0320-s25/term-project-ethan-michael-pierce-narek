@@ -20,15 +20,14 @@ function Schedule() {
     ];
 
     return (
-        <div className="schedule-page">
+        <div className="schedule-page fade-in">
             <div className="scheduler-container">
                 <h1>Mock Scheduler</h1>
 
                 {!generated ? (
-                    <form className="scheduler-form" onSubmit={handleSubmit}>
-                        {/* Concentration input */}
+                    <form className="scheduler-form fade-in" onSubmit={handleSubmit}>
                         <div style={{ marginBottom: "1.5rem" }}>
-                            <label htmlFor="concentration">Concentration:</label><br/>
+                            <label htmlFor="concentration">Concentration:</label><br />
                             <input
                                 type="text"
                                 id="concentration"
@@ -38,9 +37,8 @@ function Schedule() {
                             />
                         </div>
 
-                        {/* Requirements input */}
                         <div style={{ marginBottom: "1.5rem" }}>
-                            <label htmlFor="requirements">Requirements (comma-separated):</label><br/>
+                            <label htmlFor="requirements">Requirements (comma-separated):</label><br />
                             <input
                                 type="text"
                                 id="requirements"
@@ -50,15 +48,13 @@ function Schedule() {
                             />
                         </div>
 
-                        {/* Number of Courses radio buttons */}
                         <div style={{ marginBottom: "1.5rem" }}>
-                            <label>Number of Courses:</label><br/>
+                            <label>Number of Courses:</label><br />
                             <label><input type="radio" value={3} checked={numCourses === 3} onChange={() => setNumCourses(3)} /> 3</label>{" "}
                             <label><input type="radio" value={4} checked={numCourses === 4} onChange={() => setNumCourses(4)} /> 4</label>{" "}
                             <label><input type="radio" value={5} checked={numCourses === 5} onChange={() => setNumCourses(5)} /> 5</label>
                         </div>
 
-                        {/* Submit button */}
                         <button type="submit">Build Schedule</button>
                     </form>
                 ) : (
@@ -81,7 +77,7 @@ function Schedule() {
                                     <h3 style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>{day}</h3>
                                     {mockSchedule.filter(c => c.day === day).map((course) => (
                                         <div key={course.name} style={{ marginBottom: "0.5rem", textAlign: "center" }}>
-                                            <strong>{course.name}</strong><br/>
+                                            <strong>{course.name}</strong><br />
                                             <small>{course.time}</small>
                                         </div>
                                     ))}

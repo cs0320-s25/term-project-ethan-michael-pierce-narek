@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "🚀 Starting server on http://localhost:3232"
+mvn compile exec:java -Dexec.mainClass="Server"

@@ -8,14 +8,64 @@
 }
 
 .scheduler-container {
-    max-width: 600px;
     width: 100%;
 }
 
 .scheduler-form {
-    background: #fff;
+    background: #ffe5e5;
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     margin-top: 2rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.scheduler-form input[type="text"] {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff7f7;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.04);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.scheduler-form input[type="text"]::placeholder {
+    color: #aaa;
+}
+
+.scheduler-form input[type="text"]:focus {
+    outline: none;
+    border-color: #e88;
+    box-shadow: 0 0 0 3px rgba(255, 100, 100, 0.2);
+}
+
+.scheduler-form button {
+    background-color: #111;
+    color: white;
+    padding: 0.8rem 1.4rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.scheduler-form button:hover {
+    background-color: #a31e1e; /* dark red hover */
 }
