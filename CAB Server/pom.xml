@@ -44,13 +44,11 @@
       <version>33.4.0-jre</version>
     </dependency>
 
-
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-databind</artifactId>
-        <version>2.13.0</version>
-      </dependency>
-
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.13.0</version>
+    </dependency>
 
     <dependency>
       <groupId>com.squareup.moshi</groupId>
@@ -63,11 +61,11 @@
       <version>1.13.0</version>
     </dependency>
 
-
     <dependency>
       <groupId>com.squareup.okio</groupId>
       <artifactId>okio</artifactId>
-      <version>2.10.0</version> <!-- Compatible with Moshi 1.13.0 -->
+      <version>2.10.0</version>
+      <!-- Compatible with Moshi 1.13.0 -->
     </dependency>
 
     <dependency>

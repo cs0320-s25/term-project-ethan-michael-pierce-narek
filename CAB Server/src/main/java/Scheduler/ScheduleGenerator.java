@@ -1,5 +1,7 @@
 package Scheduler;
 
+import Utilities.BrownCourseRequirements;
+import Utilities.IsWRIT;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
@@ -10,12 +12,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import Utilities.IsWRIT;
-import Utilities.BrownCourseRequirements;
-
-/**
- * This class generates optimal schedules for Brown students based on their preferences.
- */
+/** This class generates optimal schedules for Brown students based on their preferences. */
 public class ScheduleGenerator {
 
   // Constants
@@ -44,12 +41,10 @@ public class ScheduleGenerator {
   // Results
   private List<Schedule> generatedSchedules; // List of schedule options
 
-  /**
-   * Class representing the balance between MWF and TTh classes
-   */
+  /** Class representing the balance between MWF and TTh classes */
   public static class DayBalance {
-    int mwfCount;
-    int tthCount;
+    public int mwfCount;
+    public int tthCount;
 
     public DayBalance(int mwfCount, int tthCount) {
       this.mwfCount = mwfCount;
@@ -57,12 +52,10 @@ public class ScheduleGenerator {
     }
   }
 
-  /**
-   * Class representing a complete schedule option
-   */
+  /** Class representing a complete schedule option */
   public static class Schedule {
-    List<Map<String, Object>> courses;
-    double score; // How well this schedule matches preferences
+    public List<Map<String, Object>> courses;
+    public double score; // How well this schedule matches preferences
 
     public Schedule() {
       this.courses = new ArrayList<>();
@@ -128,9 +121,7 @@ public class ScheduleGenerator {
     }
   }
 
-  /**
-   * Constructor for ScheduleGenerator
-   */
+  /** Constructor for ScheduleGenerator */
   public ScheduleGenerator(
       int classesPerSemester,
       List<String> coursesTaken,
@@ -158,9 +149,7 @@ public class ScheduleGenerator {
     this.courseMap = new HashMap<>();
   }
 
-  /**
-   * Load course data from the JSON file
-   */
+  /** Load course data from the JSON file */
   public void loadCourseData(String term) throws IOException {
     String json = Files.readString(Paths.get(COURSES_FILE));
     Type type = Types.newParameterizedType(Map.class, String.class, Object.class);
@@ -181,9 +170,7 @@ public class ScheduleGenerator {
     System.out.println("Loaded " + this.allCourses.size() + " courses for term " + term);
   }
 
-  /**
-   * First pass: filter courses by prerequisites, already taken, and time availability
-   */
+  /** First pass: filter courses by prerequisites, already taken, and time availability */
   public void filterCourses(String term) throws Exception {
     this.filteredCourses = new ArrayList<>();
 
@@ -224,9 +211,7 @@ public class ScheduleGenerator {
     System.out.println("Filtered to " + this.filteredCourses.size() + " available courses");
   }
 
-  /**
-   * Check if prerequisites are met for a course
-   */
+  /** Check if prerequisites are met for a course */
   private boolean checkPrerequisites(String courseCode, String term) {
     try {
       // Get the course data from our map
@@ -245,7 +230,8 @@ public class ScheduleGenerator {
         // In a real implementation, we would modify BrownCourseRequirements to return the info
 
         // For now, we'll use a placeholder description if the course exists
-        description = "Prerequisite: " + courseCode + " requires previous coursework in the department.";
+        description =
+            "Prerequisite: " + courseCode + " requires previous coursework in the department.";
       } catch (Exception e) {
         System.err.println("Error getting course requirements: " + e.getMessage());
         // If we can't get prerequisites, assume none
@@ -260,9 +246,7 @@ public class ScheduleGenerator {
     }
   }
 
-  /**
-   * Second pass: Add necessary courses
-   */
+  /** Second pass: Add necessary courses */
   public List<String> verifyNecessaryCourses(String term) throws Exception {
     List<String> missingPrereqs = new ArrayList<>();
 
@@ -275,15 +259,13 @@ public class ScheduleGenerator {
     return missingPrereqs;
   }
 
-  /**
-   * Generate schedule options
-   */
+  /** Generate schedule options */
   public List<Schedule> generateSchedules(String term) throws Exception {
     // Check if all necessary courses have prerequisites met
     List<String> missingPrereqs = verifyNecessaryCourses(term);
     if (!missingPrereqs.isEmpty()) {
-      throw new IllegalStateException("Missing prerequisites for necessary courses: " +
-          String.join(", ", missingPrereqs));
+      throw new IllegalStateException(
+          "Missing prerequisites for necessary courses: " + String.join(", ", missingPrereqs));
     }
 
     // Get all necessary courses first
@@ -299,8 +281,11 @@ public class ScheduleGenerator {
 
     // If necessary courses already exceed classesPerSemester, we have an issue
     if (necessaryCourseList.size() > this.classesPerSemester) {
-      throw new IllegalStateException("Too many necessary courses specified: " +
-          necessaryCourseList.size() + " > " + this.classesPerSemester);
+      throw new IllegalStateException(
+          "Too many necessary courses specified: "
+              + necessaryCourseList.size()
+              + " > "
+              + this.classesPerSemester);
     }
 
     // Start with a schedule containing just the necessary courses
@@ -310,33 +295,36 @@ public class ScheduleGenerator {
     boolean needToAddWRIT = this.needWRIT && !baseSchedule.hasWRITCourse(term);
 
     // Filter remaining courses (not already in the schedule)
-    Set<String> coursesInSchedule = baseSchedule.courses.stream()
-        .map(c -> (String)c.get("code"))
-        .collect(Collectors.toSet());
+    Set<String> coursesInSchedule =
+        baseSchedule.courses.stream().map(c -> (String) c.get("code")).collect(Collectors.toSet());
 
-    List<Map<String, Object>> remainingFilteredCourses = this.filteredCourses.stream()
-        .filter(c -> !coursesInSchedule.contains((String)c.get("code")))
-        .collect(Collectors.toList());
+    List<Map<String, Object>> remainingFilteredCourses =
+        this.filteredCourses.stream()
+            .filter(c -> !coursesInSchedule.contains((String) c.get("code")))
+            .collect(Collectors.toList());
 
     // Create a priority queue for required courses
-    List<Map<String, Object>> requiredCourseOptions = remainingFilteredCourses.stream()
-        .filter(c -> this.remainingRequired.contains((String)c.get("code")))
-        .collect(Collectors.toList());
+    List<Map<String, Object>> requiredCourseOptions =
+        remainingFilteredCourses.stream()
+            .filter(c -> this.remainingRequired.contains((String) c.get("code")))
+            .collect(Collectors.toList());
 
     // Elective course options (filtered by preferred departments if specified)
-    List<Map<String, Object>> electiveCourseOptions = remainingFilteredCourses.stream()
-        .filter(c -> {
-          String code = (String)c.get("code");
-          String dept = code.split(" ")[0];
-          return !this.remainingRequired.contains(code) &&
-              (this.preferredDepts.isEmpty() || this.preferredDepts.contains(dept));
-        })
-        .collect(Collectors.toList());
+    List<Map<String, Object>> electiveCourseOptions =
+        remainingFilteredCourses.stream()
+            .filter(
+                c -> {
+                  String code = (String) c.get("code");
+                  String dept = code.split(" ")[0];
+                  return !this.remainingRequired.contains(code)
+                      && (this.preferredDepts.isEmpty() || this.preferredDepts.contains(dept));
+                })
+            .collect(Collectors.toList());
 
     // Start recursive schedule building
     this.generatedSchedules.clear();
-    buildSchedules(baseSchedule, requiredCourseOptions, electiveCourseOptions,
-        0, needToAddWRIT, term);
+    buildSchedules(
+        baseSchedule, requiredCourseOptions, electiveCourseOptions, 0, needToAddWRIT, term);
 
     // Sort schedules by score
     this.generatedSchedules.sort((s1, s2) -> Double.compare(s2.score, s1.score));
@@ -346,16 +334,15 @@ public class ScheduleGenerator {
     return this.generatedSchedules.subList(0, maxOptions);
   }
 
-  /**
-   * Recursive schedule building
-   */
+  /** Recursive schedule building */
   private void buildSchedules(
       Schedule currentSchedule,
       List<Map<String, Object>> requiredOptions,
       List<Map<String, Object>> electiveOptions,
       int requiredAdded,
       boolean needWRIT,
-      String term) throws Exception {
+      String term)
+      throws Exception {
 
     // Base case: schedule is full
     if (currentSchedule.courses.size() >= this.classesPerSemester) {
@@ -387,8 +374,8 @@ public class ScheduleGenerator {
         newRequiredOptions.remove(i);
 
         // Continue building the schedule
-        buildSchedules(newSchedule, newRequiredOptions, electiveOptions,
-            requiredAdded + 1, needWRIT, term);
+        buildSchedules(
+            newSchedule, newRequiredOptions, electiveOptions, requiredAdded + 1, needWRIT, term);
       }
     }
 
@@ -441,15 +428,13 @@ public class ScheduleGenerator {
         newElectiveOptions.remove(course);
 
         // Continue building the schedule
-        buildSchedules(newSchedule, requiredOptions, newElectiveOptions,
-            requiredAdded, newNeedWRIT, term);
+        buildSchedules(
+            newSchedule, requiredOptions, newElectiveOptions, requiredAdded, newNeedWRIT, term);
       }
     }
   }
 
-  /**
-   * Calculate a score for a schedule based on how well it meets preferences
-   */
+  /** Calculate a score for a schedule based on how well it meets preferences */
   private void calculateScheduleScore(Schedule schedule) {
     double score = 100.0; // Start with a perfect score
 

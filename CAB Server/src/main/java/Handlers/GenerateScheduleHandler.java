@@ -10,9 +10,7 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
-/**
- * This handler processes requests to generate optimal schedules based on user preferences.
- */
+/** This handler processes requests to generate optimal schedules based on user preferences. */
 public class GenerateScheduleHandler implements Route {
 
   private static final Moshi moshi = new Moshi.Builder().build();
@@ -46,7 +44,8 @@ public class GenerateScheduleHandler implements Route {
       Set<String> availableTimes = new HashSet<>((List<String>) requestData.get("availableTimes"));
 
       // Parse day availability
-      Map<String, Object> dayAvailabilityObj = (Map<String, Object>) requestData.get("dayAvailability");
+      Map<String, Object> dayAvailabilityObj =
+          (Map<String, Object>) requestData.get("dayAvailability");
       Map<String, Boolean> dayAvailability = new HashMap<>();
       for (Map.Entry<String, Object> entry : dayAvailabilityObj.entrySet()) {
         dayAvailability.put(entry.getKey(), (Boolean) entry.getValue());
@@ -54,28 +53,29 @@ public class GenerateScheduleHandler implements Route {
 
       // Parse day balance preference
       Map<String, Object> dayBalanceObj = (Map<String, Object>) requestData.get("dayBalance");
-      ScheduleGenerator.DayBalance dayBalance = new ScheduleGenerator.DayBalance(
-          ((Double) dayBalanceObj.get("mwfCount")).intValue(),
-          ((Double) dayBalanceObj.get("tthCount")).intValue()
-      );
+      ScheduleGenerator.DayBalance dayBalance =
+          new ScheduleGenerator.DayBalance(
+              ((Double) dayBalanceObj.get("mwfCount")).intValue(),
+              ((Double) dayBalanceObj.get("tthCount")).intValue());
 
-      int requiredCoursesThisSemester = ((Double) requestData.get("requiredCoursesThisSemester")).intValue();
+      int requiredCoursesThisSemester =
+          ((Double) requestData.get("requiredCoursesThisSemester")).intValue();
       List<String> preferredDepts = (List<String>) requestData.get("preferredDepts");
       boolean needWRIT = (Boolean) requestData.get("needWRIT");
 
       // Initialize the schedule generator
-      ScheduleGenerator generator = new ScheduleGenerator(
-          classesPerSemester,
-          coursesTaken,
-          remainingRequired,
-          necessaryCourses,
-          availableTimes,
-          dayAvailability,
-          dayBalance,
-          requiredCoursesThisSemester,
-          preferredDepts,
-          needWRIT
-      );
+      ScheduleGenerator generator =
+          new ScheduleGenerator(
+              classesPerSemester,
+              coursesTaken,
+              remainingRequired,
+              necessaryCourses,
+              availableTimes,
+              dayAvailability,
+              dayBalance,
+              requiredCoursesThisSemester,
+              preferredDepts,
+              needWRIT);
 
       // Load course data
       generator.loadCourseData(term);

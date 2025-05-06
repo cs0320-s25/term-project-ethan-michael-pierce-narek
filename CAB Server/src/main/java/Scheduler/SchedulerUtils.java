@@ -6,16 +6,12 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Utility class for handling prerequisites and time conflicts in the scheduler system.
- */
+/** Utility class for handling prerequisites and time conflicts in the scheduler system. */
 public class SchedulerUtils {
 
   private static final Moshi moshi = new Moshi.Builder().build();
 
-  /**
-   * Represents a class meeting time.
-   */
+  /** Represents a class meeting time. */
   public static class MeetingTime {
     public List<Integer> days; // 0 = Monday, 1 = Tuesday, etc.
     public int startTime; // Minutes from midnight
@@ -27,9 +23,7 @@ public class SchedulerUtils {
       this.endTime = endTime;
     }
 
-    /**
-     * Check if this meeting time conflicts with another
-     */
+    /** Check if this meeting time conflicts with another */
     public boolean conflictsWith(MeetingTime other) {
       // Check if there's any day overlap
       boolean dayOverlap = false;
@@ -49,9 +43,7 @@ public class SchedulerUtils {
     }
   }
 
-  /**
-   * Parse the meeting times from a course.
-   */
+  /** Parse the meeting times from a course. */
   public static List<MeetingTime> parseMeetingTimes(Map<String, Object> course) {
     List<MeetingTime> meetingTimes = new ArrayList<>();
 
@@ -94,9 +86,7 @@ public class SchedulerUtils {
     return meetingTimes;
   }
 
-  /**
-   * Parse a time string like "1330" to minutes since midnight (e.g., 13*60 + 30 = 810)
-   */
+  /** Parse a time string like "1330" to minutes since midnight (e.g., 13*60 + 30 = 810) */
   private static int parseTimeToMinutes(String timeStr) {
     if (timeStr == null || timeStr.length() != 4) {
       return 0;
@@ -111,9 +101,7 @@ public class SchedulerUtils {
     }
   }
 
-  /**
-   * Check if two courses have conflicting meeting times.
-   */
+  /** Check if two courses have conflicting meeting times. */
   public static boolean hasTimeConflict(Map<String, Object> course1, Map<String, Object> course2) {
     List<MeetingTime> meetingTimes1 = parseMeetingTimes(course1);
     List<MeetingTime> meetingTimes2 = parseMeetingTimes(course2);
@@ -130,8 +118,8 @@ public class SchedulerUtils {
   }
 
   /**
-   * Parse prerequisites from a course description.
-   * Note: This is a simplified approach and might need refinement based on actual data.
+   * Parse prerequisites from a course description. Note: This is a simplified approach and might
+   * need refinement based on actual data.
    */
   public static List<String> parsePrerequisites(String description) {
     List<String> prerequisites = new ArrayList<>();
@@ -166,13 +154,9 @@ public class SchedulerUtils {
     return prerequisites;
   }
 
-  /**
-   * Check if all prerequisites for a course are satisfied.
-   */
+  /** Check if all prerequisites for a course are satisfied. */
   public static boolean arePrerequisitesSatisfied(
-      String courseCode,
-      String description,
-      List<String> coursesTaken) {
+      String courseCode, String description, List<String> coursesTaken) {
 
     List<String> prerequisites = parsePrerequisites(description);
 
@@ -191,9 +175,7 @@ public class SchedulerUtils {
     return true;
   }
 
-  /**
-   * Extract the department code from a course code.
-   */
+  /** Extract the department code from a course code. */
   public static String getDepartmentCode(String courseCode) {
     if (courseCode == null || courseCode.isEmpty()) {
       return "";
@@ -207,9 +189,7 @@ public class SchedulerUtils {
     return "";
   }
 
-  /**
-   * Parse the human-readable meeting string (e.g., "MWF 10-10:50a") to days of the week.
-   */
+  /** Parse the human-readable meeting string (e.g., "MWF 10-10:50a") to days of the week. */
   public static Set<String> parseMeetingDays(String meetingString) {
     Set<String> days = new HashSet<>();
 
@@ -228,7 +208,8 @@ public class SchedulerUtils {
     // Handle special cases like "MWThF"
     if (daysPart.contains("Th")) {
       if (daysPart.contains("M")) days.add("M");
-      if (daysPart.contains("T") && !daysPart.equals("Th") && !daysPart.startsWith("Th")) days.add("T");
+      if (daysPart.contains("T") && !daysPart.equals("Th") && !daysPart.startsWith("Th"))
+        days.add("T");
       if (daysPart.contains("W")) days.add("W");
       days.add("Th");
       if (daysPart.contains("F")) days.add("F");
@@ -245,9 +226,7 @@ public class SchedulerUtils {
     return days;
   }
 
-  /**
-   * Parse the time range from a meeting string (e.g., "10-10:50a" from "MWF 10-10:50a")
-   */
+  /** Parse the time range from a meeting string (e.g., "10-10:50a" from "MWF 10-10:50a") */
   public static Map<String, Integer> parseTimeRange(String meetingString) {
     Map<String, Integer> result = new HashMap<>();
     result.put("start", -1);
