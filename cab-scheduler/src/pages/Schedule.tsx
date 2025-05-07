@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useUser, useAuth } from "@clerk/clerk-react";
 import "./schedule.css";
 
 function Schedule() {
@@ -6,11 +7,22 @@ function Schedule() {
     const [requirements, setRequirements] = useState("");
     const [numCourses, setNumCourses] = useState(4);
     const [generated, setGenerated] = useState(false);
+    const { user } = useUser();
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        setGenerated(true);
-    };
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  try {
+    const response = await fetch(
+      `http://localhost:3232/generateschedule?user=${user?.id}`
+    );
+    const unsafeMetadata = await response.json();
+    console.log("Unsafe Metadata:", unsafeMetadata);
+    setGenerated(true);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
 
     const mockSchedule = [
         { name: "CSCI0320", day: "Mon", time: "10:00AM" },
