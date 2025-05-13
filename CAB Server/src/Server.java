@@ -3,6 +3,7 @@ import static spark.Spark.after;
 import static spark.Spark.options;
 
 import Handlers.FilterHandler;
+import Handlers.ScheduleHandler;
 import spark.Spark;
 
 /**
@@ -35,6 +36,7 @@ public final class Server {
 
     // csv endpoints
     Spark.get("/filter", new FilterHandler());
+    Spark.get("/generateschedule", new ScheduleHandler());
     Spark.init();
     Spark.awaitInitialization();
     System.out.println("Server started at http://localhost:" + port);

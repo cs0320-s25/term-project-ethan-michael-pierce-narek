@@ -1,3 +1,5 @@
+package Utilities;
+
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import java.nio.file.Files;
@@ -9,7 +11,7 @@ public class FormatCourses {
     try {
       // Define paths
       String inputPath = "data/F25courses.json";
-      String outputPath = "data/courses_formatted.json";
+      String outputPath = "data/courses_formatted1.json";
 
       // Verify input file exists
       if (!Files.exists(Paths.get(inputPath))) {

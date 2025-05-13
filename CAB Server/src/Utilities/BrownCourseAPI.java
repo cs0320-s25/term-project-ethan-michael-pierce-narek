@@ -1,3 +1,5 @@
+package Utilities;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -17,7 +19,7 @@ public class BrownCourseAPI {
 
   public static void main(String[] args) throws Exception {
     // Fetch and save all courses for Summer 2024 (term 202420)
-    fetchAndSaveCourses("202420");
+    fetchAndSaveCourses("202410");
   }
 
   public static void fetchAndSaveCourses(String term) throws Exception {
