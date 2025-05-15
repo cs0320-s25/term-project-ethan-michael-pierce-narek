@@ -1,5 +1,5 @@
 import { useUser, SignInButton } from "@clerk/clerk-react";
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 
 function Home() {
   const { user } = useUser();
@@ -9,17 +9,67 @@ function Home() {
   const [requiredClasses, setRequiredClasses] = useState<string[]>([]);
   const [electiveDepartments, setElectiveDepartments] = useState<string[]>([]);
   const [needsWrit, setNeedsWrit] = useState<boolean>(false);
+  const [hasLoadedMetadata, setHasLoadedMetadata] = useState(false);
 
+
+
+// Load metadata once on mount
   useEffect(() => {
-    if (user?.publicMetadata) {
-      setExcludedClasses(user.publicMetadata.excludedClasses ?? []);
-      setTotalClasses(user.publicMetadata.totalClasses ?? 3);
-      setMwfClasses(user.publicMetadata.mwfClasses ?? 2);
-      setRequiredClasses(user.publicMetadata.requiredClasses ?? []);
-      setElectiveDepartments(user.publicMetadata.electiveDepartments ?? []);
-      setNeedsWrit(user.publicMetadata.needsWrit ?? false);
+    if (user && !hasLoadedMetadata) {
+      const metadata = user.unsafeMetadata as {
+        excludedClasses?: string[];
+        totalClasses?: number;
+        mwfClasses?: number;
+        requiredClasses?: string[];
+        electiveDepartments?: string[];
+        needsWrit?: boolean;
+      };
+
+      setExcludedClasses(metadata.excludedClasses ?? []);
+      setTotalClasses(metadata.totalClasses ?? 3);
+      setMwfClasses(metadata.mwfClasses ?? 2);
+      setRequiredClasses(metadata.requiredClasses ?? []);
+      setElectiveDepartments(metadata.electiveDepartments ?? []);
+      setNeedsWrit(metadata.needsWrit ?? false);
+      setHasLoadedMetadata(true);
     }
-  }, [user]);
+  }, [user, hasLoadedMetadata]);
+
+// Debounce Clerk metadata updates to avoid spam
+  const saveTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const saveMetadata = async () => {
+    if (user) {
+      await user.update({
+        unsafeMetadata: {
+          excludedClasses,
+          totalClasses,
+          mwfClasses,
+          requiredClasses,
+          electiveDepartments,
+          needsWrit,
+        },
+      });
+      console.log("Clerk metadata saved");
+    }
+  };
+
+// Autosave on input change — only after metadata has been loaded
+  useEffect(() => {
+    if (!user || !hasLoadedMetadata) return;
+    if (saveTimeout.current) clearTimeout(saveTimeout.current);
+    saveTimeout.current = setTimeout(() => {
+      saveMetadata();
+    }, 500);
+  }, [
+    excludedClasses,
+    totalClasses,
+    mwfClasses,
+    requiredClasses,
+    electiveDepartments,
+    needsWrit,
+    hasLoadedMetadata
+  ]);
 
   const tthClasses = totalClasses - mwfClasses;
 
@@ -83,7 +133,7 @@ function Home() {
   const handleAddRequiredClass = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value.trim();
     if (e.key === "Enter" && value !== "") {
-      setRequiredClasses([...requiredClasses, value]);
+      setRequiredClasses((prev) => [...prev, value]);
       e.currentTarget.value = "";
     }
   };
