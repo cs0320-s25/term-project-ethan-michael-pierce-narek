@@ -6,7 +6,7 @@ interface Course {
 }
 
 export async function getCourseOfferings(
-  department: string
+  department: string,
 ): Promise<Course[]> {
   // Return cached results if available
   if (courseCache[department]) {
@@ -53,7 +53,7 @@ export async function getCourseOfferings(
     // Fallback: Try to return whatever data we can get
     try {
       const fallbackResponse = await fetch(
-        `http://localhost:3232/filter?term=202420&dept=${department}`
+        `http://localhost:3232/filter?term=202420&dept=${department}`,
       );
       if (fallbackResponse.ok) {
         const data = await fallbackResponse.json();

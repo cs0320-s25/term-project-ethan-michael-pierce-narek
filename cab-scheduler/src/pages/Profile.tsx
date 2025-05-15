@@ -106,7 +106,6 @@ function Profile() {
     Record<string, boolean>
   >({});
 
-
   // Courses state
   const [selectedCoursesList, setSelectedCoursesList] = useState<Course[]>([]);
   const [desiredCoursesList, setDesiredCoursesList] = useState<Course[]>([]);
@@ -114,24 +113,24 @@ function Profile() {
     Record<string, Course[]>
   >({});
 
-    useEffect(() => {
-      const loadData = async () => {
-        if (user) {
-          try {
-            const metadata = user.unsafeMetadata as UserMetadata;
+  useEffect(() => {
+    const loadData = async () => {
+      if (user) {
+        try {
+          const metadata = user.unsafeMetadata as UserMetadata;
 
-            // Simplified course loading - no ID generation needed
-            setSelectedCoursesList(metadata.courses || []);
-            setDesiredCoursesList(metadata.desiredCourses || []);
-          } catch (error) {
-            console.error("Error loading metadata:", error);
-          }
+          // Simplified course loading - no ID generation needed
+          setSelectedCoursesList(metadata.courses || []);
+          setDesiredCoursesList(metadata.desiredCourses || []);
+        } catch (error) {
+          console.error("Error loading metadata:", error);
         }
-        setIsLoading(false);
-      };
+      }
+      setIsLoading(false);
+    };
 
-      loadData();
-    }, [user]);
+    loadData();
+  }, [user]);
 
   const saveMetadata = useCallback(async () => {
     if (!user || isLoading) return;
@@ -150,22 +149,12 @@ function Profile() {
     } catch (error) {
       console.error("Error saving metadata:", error);
     }
-  }, [
-    user,
-    isLoading,
-    selectedCoursesList,
-    desiredCoursesList,
-    lastSavedTime,
-  ]);
+  }, [user, isLoading, selectedCoursesList, desiredCoursesList, lastSavedTime]);
 
   useEffect(() => {
     const timer = setTimeout(() => saveMetadata(), 500);
     return () => clearTimeout(timer);
-  }, [
-    selectedCoursesList,
-    desiredCoursesList,
-    saveMetadata,
-  ]);
+  }, [selectedCoursesList, desiredCoursesList, saveMetadata]);
 
   const loadDepartmentCourses = useCallback(
     async (dept: string) => {
@@ -181,7 +170,7 @@ function Profile() {
         setLoadingDepartments((prev) => ({ ...prev, [dept]: false }));
       }
     },
-    [departmentCourses]
+    [departmentCourses],
   );
 
   if (!session)
@@ -200,47 +189,49 @@ function Profile() {
       </div>
     );
 
-return (
-  <div className="profile-page">
-    <h1 className="profile-title">Profile Setup</h1>
+  return (
+    <div className="profile-page">
+      <h1 className="profile-title">Profile Setup</h1>
 
-    <div className="courses-container">
-      <div className="course-box">
-        <CompletedCourses
-          departmentList={departmentList}
-          courses={selectedCoursesList}
-          onAddCourse={(course) =>
-            setSelectedCoursesList((prev) => [...prev, course])
-          }
-          onRemoveCourse={(code) =>
-            setSelectedCoursesList((prev) =>
-              prev.filter((c) => c.code !== code)
-            )
-          }
-          departmentCourses={departmentCourses}
-          isLoadingDepartment={(dept) => !!loadingDepartments[dept]}
-          onLoadDepartment={loadDepartmentCourses}
-        />
-      </div>
+      <div className="courses-container">
+        <div className="course-box">
+          <CompletedCourses
+            departmentList={departmentList}
+            courses={selectedCoursesList}
+            onAddCourse={(course) =>
+              setSelectedCoursesList((prev) => [...prev, course])
+            }
+            onRemoveCourse={(code) =>
+              setSelectedCoursesList((prev) =>
+                prev.filter((c) => c.code !== code),
+              )
+            }
+            departmentCourses={departmentCourses}
+            isLoadingDepartment={(dept) => !!loadingDepartments[dept]}
+            onLoadDepartment={loadDepartmentCourses}
+          />
+        </div>
 
-      <div className="course-box">
-        <DesiredCourses
-          departmentList={departmentList}
-          courses={desiredCoursesList}
-          onAddCourse={(course) =>
-            setDesiredCoursesList((prev) => [...prev, course])
-          }
-          onRemoveCourse={(code) =>
-            setDesiredCoursesList((prev) => prev.filter((c) => c.code !== code))
-          }
-          departmentCourses={departmentCourses}
-          isLoadingDepartment={(dept) => !!loadingDepartments[dept]}
-          onLoadDepartment={loadDepartmentCourses}
-        />
+        <div className="course-box">
+          <DesiredCourses
+            departmentList={departmentList}
+            courses={desiredCoursesList}
+            onAddCourse={(course) =>
+              setDesiredCoursesList((prev) => [...prev, course])
+            }
+            onRemoveCourse={(code) =>
+              setDesiredCoursesList((prev) =>
+                prev.filter((c) => c.code !== code),
+              )
+            }
+            departmentCourses={departmentCourses}
+            isLoadingDepartment={(dept) => !!loadingDepartments[dept]}
+            onLoadDepartment={loadDepartmentCourses}
+          />
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
 }
 
 export default Profile;
