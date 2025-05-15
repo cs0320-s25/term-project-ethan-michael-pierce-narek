@@ -54,7 +54,7 @@ public class FilterCourses {
             && (courseCode.startsWith(deptCode + " ") || deptCode == null)
             && (courseDay.equals(day) || day == null)
             && (courseTime.equals(time) || time == null)
-            && (IsWRIT.isClassWRIT(courseCode, courseTerm).equals(writ) || writ == null)
+            && (writ == null || CourseCatalog.isWrit(courseCode) == writ)
             && no.startsWith("S")) {
 
           filteredCourses.add(course);

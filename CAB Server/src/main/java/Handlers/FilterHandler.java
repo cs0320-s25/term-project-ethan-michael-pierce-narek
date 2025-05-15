@@ -22,10 +22,8 @@ public class FilterHandler implements Route {
       return filterCourses(term, dept, time, day, writ);
 
     } catch (Exception e) {
-      System.err.println("ERROR FILTER HANDLER:");
-      e.printStackTrace();
-      response.status(500);
-      return "{\"error\":\"" + e.getMessage() + "\"}";
+
+      return "error" + e.getMessage();
     }
   }
 }
