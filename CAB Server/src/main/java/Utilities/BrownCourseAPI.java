@@ -60,7 +60,7 @@ public class BrownCourseAPI {
     String searchBody =
         String.format(
             "{\"other\":{\"srcdb\":\"%s\"},\"criteria\":[{\"field\":\"is_ind_study\",\"value\":\"N\"},{\"field\":\"is_canc\",\"value\":\"N\"}]}",
-            term);
+            term); // Only include courses that are not independent study and are not cancelled
 
     HttpRequest searchReq =
         HttpRequest.newBuilder()
@@ -130,7 +130,8 @@ public class BrownCourseAPI {
     }
 
     Map<String, Object> uniqueRoot = new LinkedHashMap<>(root);
-    uniqueRoot.put("results", new ArrayList<>(coursesByCode.values()));
+    uniqueRoot.put(
+        "results", new ArrayList<>(coursesByCode.values())); // switch with non-duplicate version
     uniqueRoot.put("count", coursesByCode.size());
 
     Path out = Paths.get(DATA_DIR, COURSES_FILE);
@@ -157,11 +158,14 @@ public class BrownCourseAPI {
   }
 
   private static String extractPrereq(String description, String restrictions) {
-    String text = (description == null ? "" : description) + " " + (restrictions == null ? "" : restrictions);
+    String text =
+        (description == null ? "" : description) + " " + (restrictions == null ? "" : restrictions);
     int idx = text.toLowerCase().indexOf("prerequisite");
     if (idx == -1) return "";
     int end = text.indexOf('.', idx); // Look for first period after the word prerequisite
-    String sent = text.substring(idx, end == -1 ? text.length() : end); // Substring from prereq to end of sentence
+    String sent =
+        text.substring(
+            idx, end == -1 ? text.length() : end); // Substring from prereq to end of sentence
     return sent.replaceFirst("(?i)prerequisite[s]?:", "").trim(); // Remove word prerequisite
   }
 
@@ -173,9 +177,12 @@ public class BrownCourseAPI {
     String text =
         html.replaceAll("<[^>]+>", " ") // Remove html tags
             .replaceAll("%20", " ") // Replace url encodings
-            .replaceAll("[,;]", " , "); // Normalize commas and semicolons, replace with comma surrounded by spaces
+            .replaceAll(
+                "[,;]",
+                " , "); // Normalize commas and semicolons, replace with comma surrounded by spaces
 
-    for (String segment : text.split("(?i)\\band\\b")) { // Isolates text into parts seperated by "and"
+    for (String segment :
+        text.split("(?i)\\band\\b")) { // Isolates text into parts seperated by "and"
 
       List<String> orSet = new ArrayList<>();
       String[] tokens = segment.trim().split("\\s+"); // Remove white space, create array of tokens
@@ -185,18 +192,21 @@ public class BrownCourseAPI {
         if (token.equals(",")) continue;
 
         if (depts.contains(token.toUpperCase())) {
-          currentDept = token.toUpperCase(); // Set current department to this department for context
+          currentDept =
+              token.toUpperCase(); // Set current department to this department for context
           continue;
         }
 
-        if (token.matches("\\d{4}[A-Z]?")) { // Check if token is only 4 digit course number, ex: '0320'
+        if (token.matches(
+            "\\d{4}[A-Z]?")) { // Check if token is only 4 digit course number, ex: '0320'
           if (currentDept != null) {
             orSet.add(currentDept + " " + token);
           }
           continue;
         }
 
-        if (token.matches("[A-Z]{3,4}\\s?\\d{4}[A-Z]?")) { // Check if token is a full course, ex: 'CSCI 0320'
+        if (token.matches(
+            "[A-Z]{3,4}\\s?\\d{4}[A-Z]?")) { // Check if token is a full course, ex: 'CSCI 0320'
           String dept = token.substring(0, token.length() - 4).trim().toUpperCase();
           String num = token.substring(token.length() - 4);
           currentDept = dept; // Update department context
