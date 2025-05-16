@@ -8,16 +8,15 @@ import spark.Response;
 import spark.Route;
 
 /**
- * Handler for filtering courses based on specified criteria.
- * This class implements the Spark Route interface to handle HTTP requests
- * for filtering courses in the Brown University course catalog.
+ * Handler for filtering courses based on specified criteria. This class implements the Spark Route
+ * interface to handle HTTP requests for filtering courses in the Brown University course catalog.
  */
 public class FilterHandler implements Route {
 
   /**
    * Handles HTTP requests to filter courses based on query parameters.
    *
-   * @param request  The HTTP request containing query parameters for filtering
+   * @param request The HTTP request containing query parameters for filtering
    * @param response The HTTP response (not modified by this method)
    * @return A JSON string containing filtered course results or an error message
    * @throws Exception If an error occurs during filtering
@@ -32,9 +31,9 @@ public class FilterHandler implements Route {
       }
 
       // Extract optional filter parameters
-      String dept = request.queryParams("dept");   // Department code filter
-      String time = request.queryParams("time");   // Class time filter
-      String day = request.queryParams("day");     // Class day filter
+      String dept = request.queryParams("dept"); // Department code filter
+      String time = request.queryParams("time"); // Class time filter
+      String day = request.queryParams("day"); // Class day filter
       Boolean writ = Boolean.valueOf(request.queryParams("writ")); // WRIT designation filter
 
       // Call the filterCourses utility method to perform the actual filtering

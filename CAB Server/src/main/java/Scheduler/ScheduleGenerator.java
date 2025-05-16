@@ -15,9 +15,8 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 
 /**
- * Core engine for generating optimal course schedules.
- * This class filters courses based on user constraints and preferences,
- * then generates possible schedules that satisfy all requirements.
+ * Core engine for generating optimal course schedules. This class filters courses based on user
+ * constraints and preferences, then generates possible schedules that satisfy all requirements.
  */
 public class ScheduleGenerator {
 
@@ -64,8 +63,8 @@ public class ScheduleGenerator {
   private List<Schedule> generatedSchedules;
 
   /**
-   * Container class for schedule generation results.
-   * Includes both the generated schedules and any errors encountered.
+   * Container class for schedule generation results. Includes both the generated schedules and any
+   * errors encountered.
    */
   public static final class Result {
     /** List of generated schedules */
@@ -85,9 +84,7 @@ public class ScheduleGenerator {
     }
   }
 
-  /**
-   * Class representing the balance between MWF and TTh classes.
-   */
+  /** Class representing the balance between MWF and TTh classes. */
   public static class DayBalance {
     /** Number of classes on Monday/Wednesday/Friday */
     public int mwfCount;
@@ -106,9 +103,7 @@ public class ScheduleGenerator {
     }
   }
 
-  /**
-   * Class representing a potential course schedule.
-   */
+  /** Class representing a potential course schedule. */
   public static class Schedule {
     /** List of courses in this schedule */
     public List<Map<String, Object>> courses;
@@ -260,9 +255,8 @@ public class ScheduleGenerator {
   }
 
   /**
-   * Filters courses based on user constraints and preferences.
-   * This method applies filters for day/time availability, prerequisites,
-   * and WRIT designation requirements.
+   * Filters courses based on user constraints and preferences. This method applies filters for
+   * day/time availability, prerequisites, and WRIT designation requirements.
    *
    * @param term The term code for filtering
    * @throws Exception If an error occurs during filtering
@@ -381,8 +375,8 @@ public class ScheduleGenerator {
   }
 
   /**
-   * Generates schedules based on user preferences and constraints.
-   * This is the main method that orchestrates the schedule generation process.
+   * Generates schedules based on user preferences and constraints. This is the main method that
+   * orchestrates the schedule generation process.
    *
    * @param term The term code for which to generate schedules
    * @return A Result object containing generated schedules and any errors
@@ -474,8 +468,8 @@ public class ScheduleGenerator {
   }
 
   /**
-   * Recursively builds schedules by adding courses one at a time.
-   * This method explores all possible combinations of courses that satisfy the constraints.
+   * Recursively builds schedules by adding courses one at a time. This method explores all possible
+   * combinations of courses that satisfy the constraints.
    *
    * @param currentSchedule The schedule being built
    * @param requiredOptions List of required courses that can be added
@@ -561,8 +555,8 @@ public class ScheduleGenerator {
   }
 
   /**
-   * Calculates a score for a schedule based on how well it meets preferences.
-   * Higher scores indicate better matches to the user's preferences.
+   * Calculates a score for a schedule based on how well it meets preferences. Higher scores
+   * indicate better matches to the user's preferences.
    *
    * @param schedule The schedule to score
    */

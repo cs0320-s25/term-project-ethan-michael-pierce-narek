@@ -1,9 +1,10 @@
 package Handlers;
 
-import Scheduler.ScheduleGenerator;
 import static Utilities.ClerkAPI.getUser;
-import com.fasterxml.jackson.databind.JsonNode;
+
+import Scheduler.ScheduleGenerator;
 import Scheduler.ScheduleGenerator.Result;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
@@ -13,10 +14,9 @@ import spark.Response;
 import spark.Route;
 
 /**
- * HTTP handler for schedule generation requests.
- * This class processes requests to generate optimal course schedules based on
- * user preferences and constraints. It integrates with Clerk authentication
- * to retrieve user-specific metadata when available.
+ * HTTP handler for schedule generation requests. This class processes requests to generate optimal
+ * course schedules based on user preferences and constraints. It integrates with Clerk
+ * authentication to retrieve user-specific metadata when available.
  */
 public class ScheduleHandler implements Route {
 
@@ -28,9 +28,8 @@ public class ScheduleHandler implements Route {
       MOSHI.adapter(Types.newParameterizedType(Map.class, String.class, Object.class));
 
   /**
-   * Handles HTTP requests for schedule generation.
-   * This method processes the incoming request, validates parameters,
-   * generates schedules, and returns the results as JSON.
+   * Handles HTTP requests for schedule generation. This method processes the incoming request,
+   * validates parameters, generates schedules, and returns the results as JSON.
    *
    * @param req The HTTP request containing schedule generation parameters
    * @param res The HTTP response object for setting status codes
@@ -48,10 +47,8 @@ public class ScheduleHandler implements Route {
         meta = getUser(userId).get("unsafe_metadata");
       } catch (Exception e) {
         res.status(400);
-        return JSON.toJson(Map.of(
-            "success", false,
-            "errors", List.of("Invalid Clerk user ID: " + userId)
-        ));
+        return JSON.toJson(
+            Map.of("success", false, "errors", List.of("Invalid Clerk user ID: " + userId)));
       }
     }
 
@@ -114,8 +111,8 @@ public class ScheduleHandler implements Route {
   }
 
   /**
-   * Builds a structured response object from the schedule generation results.
-   * This method formats the schedule information into a JSON-compatible map structure.
+   * Builds a structured response object from the schedule generation results. This method formats
+   * the schedule information into a JSON-compatible map structure.
    *
    * @param result The schedule generation result containing schedules and any errors
    * @return A map containing the formatted response with schedules and metadata

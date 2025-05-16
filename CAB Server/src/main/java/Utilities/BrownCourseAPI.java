@@ -17,9 +17,9 @@ import java.nio.file.Paths;
 import java.util.*;
 
 /**
- * API client for fetching course data from Brown University's course catalog.
- * This class provides functionality to retrieve course information from the Courses@Brown system,
- * process it, and save it to a local JSON file for use by the scheduling application.
+ * API client for fetching course data from Brown University's course catalog. This class provides
+ * functionality to retrieve course information from the Courses@Brown system, process it, and save
+ * it to a local JSON file for use by the scheduling application.
  */
 public class BrownCourseAPI {
 
@@ -36,8 +36,8 @@ public class BrownCourseAPI {
   private static final String COURSES_FILE = "courses_formatted.json";
 
   /**
-   * HTTP headers required for Courses@Brown API requests.
-   * These simulate a browser request to avoid being blocked.
+   * HTTP headers required for Courses@Brown API requests. These simulate a browser request to avoid
+   * being blocked.
    */
   private static final Map<String, String> HEADERS =
       Map.ofEntries(
@@ -58,8 +58,8 @@ public class BrownCourseAPI {
           Map.entry("Priority", "u=0"));
 
   /**
-   * Cookie header required for Courses@Brown API requests.
-   * This is needed to authenticate requests to the API.
+   * Cookie header required for Courses@Brown API requests. This is needed to authenticate requests
+   * to the API.
    */
   private static final String COOKIE_HEADER =
       "AMCV_4D6368F454EC41940A4C98A6%40AdobeOrg=179643557%7CMCIDTS%7C20146%7CMCMID%7C35620687361685143708671614397990958274%7CMCAID%7CNONE%7CMCOPTOUT-1740540362s%7CNONE%7CvVersion%7C5.5.0; "
@@ -67,8 +67,8 @@ public class BrownCourseAPI {
           + "AMP_572175c4a8=JTdCJTIyZGV2aWNlSWQlMjIlM0ElMjJhN2Y4ZDQwNS04NzE5LTRjNTQtODM4MC1iOTQ3ZDRhYTE3ZWMlMjIlMkMlMjJ1c2VySWQlMjIlM0ElMjI3ODUxOTk5YTYwN2ZjOWI2Y2EyMDUwNjM1NWVkMTgxN2U4NjcwMDcwNzI4NTIxZjNlY2I1YzIzNTcwNjAzMzA0JTIyJTJDJTIyc2Vzc2lvbklkJTIyJTNBMTc0NTI2NDU2MTk4NSUyQyUyMm9wdE91dCUyMiUzQWZhbHNlJTJDJTIybGFzdEV2ZW50VGltZSUyMiUzQTE3NDUyNjQ2MDMyMzElMkMlMjJsYXN0RXZlbnRJZCUyMiUzQTI4JTJDJTIycGFnZUNvdW50ZXIlMjIlM0E4JTdE";
 
   /**
-   * Entry point for running the API client as a standalone application.
-   * Fetches course data for the Spring 2025 term.
+   * Entry point for running the API client as a standalone application. Fetches course data for the
+   * Spring 2025 term.
    *
    * @param args Command line arguments (not used)
    * @throws Exception If an error occurs during the fetch process
@@ -78,14 +78,11 @@ public class BrownCourseAPI {
   }
 
   /**
-   * Fetches course data for a specified term, processes it, and saves it to a JSON file.
-   * This method handles the complete process of retrieving and processing course data,
-   * including:
-   * - Fetching basic course information
-   * - Retrieving detailed information for each course
-   * - Extracting WRIT designation and prerequisites
-   * - Removing duplicate sections
-   * - Formatting and saving the data
+   * Fetches course data for a specified term, processes it, and saves it to a JSON file. This
+   * method handles the complete process of retrieving and processing course data, including: -
+   * Fetching basic course information - Retrieving detailed information for each course -
+   * Extracting WRIT designation and prerequisites - Removing duplicate sections - Formatting and
+   * saving the data
    *
    * @param term The term code to fetch courses for (e.g., "202420" for Spring 2025)
    * @throws Exception If an error occurs during the fetch, process, or save steps
@@ -194,8 +191,8 @@ public class BrownCourseAPI {
   }
 
   /**
-   * Retrieves detailed information for a specific course.
-   * Makes an API request to get full course details using the CRN and term code.
+   * Retrieves detailed information for a specific course. Makes an API request to get full course
+   * details using the CRN and term code.
    *
    * @param crn The Course Registration Number
    * @param term The term code (e.g., "202420")
@@ -224,8 +221,8 @@ public class BrownCourseAPI {
   }
 
   /**
-   * Extracts prerequisite text from course information.
-   * Looks for the word "prerequisite" in the text and extracts the sentence containing it.
+   * Extracts prerequisite text from course information. Looks for the word "prerequisite" in the
+   * text and extracts the sentence containing it.
    *
    * @param description Course description text (may be null)
    * @param restrictions Course registration restrictions text (may be null)
@@ -241,18 +238,16 @@ public class BrownCourseAPI {
     int end = text.indexOf('.', idx);
 
     // Extract the sentence containing prerequisites
-    String sent =
-        text.substring(idx, end == -1 ? text.length() : end);
+    String sent = text.substring(idx, end == -1 ? text.length() : end);
 
     // Remove the word "prerequisite" or "prerequisites:" and trim whitespace
     return sent.replaceFirst("(?i)prerequisite[s]?:", "").trim();
   }
 
   /**
-   * Extracts structured prerequisite information from HTML text.
-   * Parses the text to identify course codes and organize them into logical groups.
-   * Each outer list represents an "AND" condition (must satisfy all),
-   * while each inner list represents an "OR" condition (must satisfy one).
+   * Extracts structured prerequisite information from HTML text. Parses the text to identify course
+   * codes and organize them into logical groups. Each outer list represents an "AND" condition
+   * (must satisfy all), while each inner list represents an "OR" condition (must satisfy one).
    *
    * @param html HTML text containing prerequisite information
    * @param depts Set of valid department codes for context
@@ -307,8 +302,8 @@ public class BrownCourseAPI {
   }
 
   /**
-   * Converts the headers map to an array format required by HttpRequest.
-   * Each key-value pair in the map becomes two consecutive elements in the array.
+   * Converts the headers map to an array format required by HttpRequest. Each key-value pair in the
+   * map becomes two consecutive elements in the array.
    *
    * @return Array of header strings in key,value order
    */

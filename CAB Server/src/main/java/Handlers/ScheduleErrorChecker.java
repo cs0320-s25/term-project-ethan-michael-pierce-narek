@@ -9,15 +9,15 @@ import java.util.stream.Stream;
 import spark.Request;
 
 /**
- * Utility class for validating and processing schedule generation parameters.
- * This class handles parameter parsing, validation, and error checking for the course scheduling system.
- * It ensures all constraints are valid before attempting to generate schedules.
+ * Utility class for validating and processing schedule generation parameters. This class handles
+ * parameter parsing, validation, and error checking for the course scheduling system. It ensures
+ * all constraints are valid before attempting to generate schedules.
  */
 public final class ScheduleErrorChecker {
 
   /**
-   * Container class for storing all schedule generation parameters.
-   * This class holds both the raw string inputs and their parsed versions.
+   * Container class for storing all schedule generation parameters. This class holds both the raw
+   * string inputs and their parsed versions.
    */
   public static class Params {
     String term, classes, taken, remaining, needed, times, depts, writParam;
@@ -31,8 +31,8 @@ public final class ScheduleErrorChecker {
   }
 
   /**
-   * Parses and validates request parameters for schedule generation.
-   * This method extracts parameters from both query parameters and the provided metadata JSON.
+   * Parses and validates request parameters for schedule generation. This method extracts
+   * parameters from both query parameters and the provided metadata JSON.
    *
    * @param req The HTTP request containing query parameters
    * @param meta Optional JSON metadata containing course information (may be null)
@@ -119,8 +119,8 @@ public final class ScheduleErrorChecker {
   }
 
   /**
-   * Validates schedule parameters before course filtering.
-   * Checks for logical consistency in user preferences and constraints.
+   * Validates schedule parameters before course filtering. Checks for logical consistency in user
+   * preferences and constraints.
    *
    * @param p The parsed parameters to validate
    * @param errors List to collect validation errors
@@ -203,8 +203,8 @@ public final class ScheduleErrorChecker {
   }
 
   /**
-   * Validates schedule parameters after course filtering.
-   * Checks for issues related to course availability, time conflicts, and prerequisites.
+   * Validates schedule parameters after course filtering. Checks for issues related to course
+   * availability, time conflicts, and prerequisites.
    *
    * @param gen The schedule generator containing filtered courses
    * @param p The parsed parameters to validate
@@ -271,11 +271,9 @@ public final class ScheduleErrorChecker {
 
     if (!bad.isEmpty()) {
       if (bad.size() == 1) {
-        errors.add(
-            String.format("Course \"%s\" doesn't seem to exist", bad.get(0)));
+        errors.add(String.format("Course \"%s\" doesn't seem to exist", bad.get(0)));
       } else {
-        errors.add(
-            String.format("These courses don't seem to exist: %s", String.join(", ", bad)));
+        errors.add(String.format("These courses don't seem to exist: %s", String.join(", ", bad)));
       }
     }
   }

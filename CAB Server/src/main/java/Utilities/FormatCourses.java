@@ -5,19 +5,16 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 /**
- * Utility class for formatting raw course data JSON files.
- * This class reads a raw JSON file containing Brown University course data,
- * parses it, and writes it back in a consistently formatted, pretty-printed format
- * for better readability and processing by other components of the system.
+ * Utility class for formatting raw course data JSON files. This class reads a raw JSON file
+ * containing Brown University course data, parses it, and writes it back in a consistently
+ * formatted, pretty-printed format for better readability and processing by other components of the
+ * system.
  */
 public class FormatCourses {
   /**
-   * Main method that performs the JSON formatting process.
-   * The process includes:
-   * 1. Checking if the input file exists
-   * 2. Reading and parsing the JSON file
-   * 3. Pretty-printing the JSON with consistent indentation
-   * 4. Writing the formatted JSON to the output file
+   * Main method that performs the JSON formatting process. The process includes: 1. Checking if the
+   * input file exists 2. Reading and parsing the JSON file 3. Pretty-printing the JSON with
+   * consistent indentation 4. Writing the formatted JSON to the output file
    *
    * @param args Command line arguments (not used)
    */

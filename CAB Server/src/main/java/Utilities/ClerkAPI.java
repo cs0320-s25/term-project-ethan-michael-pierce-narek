@@ -7,10 +7,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Client for interacting with the Clerk authentication API.
- * This utility provides methods to retrieve user information from Clerk,
- * which is used for authentication and user metadata storage in the
- * course scheduling application.
+ * Client for interacting with the Clerk authentication API. This utility provides methods to
+ * retrieve user information from Clerk, which is used for authentication and user metadata storage
+ * in the course scheduling application.
  */
 public class ClerkAPI {
 
@@ -18,9 +17,8 @@ public class ClerkAPI {
   private static final ObjectMapper mapper = new ObjectMapper();
 
   /**
-   * Clerk API secret key for server-side authentication.
-   * Note: In a production environment, this should be stored in environment
-   * variables or a secure configuration system, not hardcoded.
+   * Clerk API secret key for server-side authentication. Note: In a production environment, this
+   * should be stored in environment variables or a secure configuration system, not hardcoded.
    */
   private static final String CLERK_SECRET_KEY =
       "sk_test_aYPrgZ2mZYpoTMeUSZqeDXlztrkweExpiFTZQ4UVGx";
@@ -29,9 +27,8 @@ public class ClerkAPI {
   private static final String CLERK_API_URL = "https://api.clerk.dev/v1/users/";
 
   /**
-   * Retrieves detailed information about a Clerk user.
-   * This method makes an authenticated request to the Clerk API to fetch
-   * user profile and metadata for the specified user ID.
+   * Retrieves detailed information about a Clerk user. This method makes an authenticated request
+   * to the Clerk API to fetch user profile and metadata for the specified user ID.
    *
    * @param userId The Clerk user ID to retrieve information for
    * @return A JsonNode containing the user's profile information and metadata

@@ -8,18 +8,17 @@ import java.util.*;
 import java.util.Map;
 
 /**
- * Utility class for filtering courses based on various criteria.
- * This class provides functionality to filter Brown University courses by term,
- * department, meeting time, meeting day, and WRIT designation.
+ * Utility class for filtering courses based on various criteria. This class provides functionality
+ * to filter Brown University courses by term, department, meeting time, meeting day, and WRIT
+ * designation.
  */
 public class FilterCourses {
   /** Moshi instance for JSON serialization/deserialization */
   private static final Moshi moshi = new Moshi.Builder().build();
 
   /**
-   * Main method for running the course filter as a standalone utility.
-   * Demonstrates filtering Sociology courses offered on MWF with WRIT designation
-   * for the Spring 2025 term.
+   * Main method for running the course filter as a standalone utility. Demonstrates filtering
+   * Sociology courses offered on MWF with WRIT designation for the Spring 2025 term.
    *
    * @param args Command line arguments (not used)
    */
@@ -35,15 +34,15 @@ public class FilterCourses {
   }
 
   /**
-   * Filters courses based on specified criteria.
-   * This method loads course data from a JSON file and filters it according to
-   * the provided parameters. All parameters except term are optional.
+   * Filters courses based on specified criteria. This method loads course data from a JSON file and
+   * filters it according to the provided parameters. All parameters except term are optional.
    *
    * @param term The term code to filter by (e.g., "202420" for Spring 2025)
    * @param deptCode The department code to filter by (e.g., "CSCI"), or null for all departments
    * @param time The specific time block to filter by (e.g., "10-11:20a"), or null for all times
    * @param day The specific day(s) to filter by (e.g., "MWF", "TTh"), or null for all days
-   * @param writ Boolean indicating whether to include only WRIT courses (true), non-WRIT courses (false), or both (null)
+   * @param writ Boolean indicating whether to include only WRIT courses (true), non-WRIT courses
+   *     (false), or both (null)
    * @return A JSON string containing the filtered courses
    * @throws Exception If an error occurs during file reading or JSON processing
    */

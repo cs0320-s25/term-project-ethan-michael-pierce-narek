@@ -5,9 +5,8 @@ import com.squareup.moshi.Moshi;
 import java.util.*;
 
 /**
- * Utility class for schedule-related operations.
- * Provides methods for time conflict detection, parsing meeting times,
- * evaluating prerequisites, and validating schedule constraints.
+ * Utility class for schedule-related operations. Provides methods for time conflict detection,
+ * parsing meeting times, evaluating prerequisites, and validating schedule constraints.
  */
 public class SchedulerUtils {
 
@@ -15,8 +14,8 @@ public class SchedulerUtils {
   private static final Moshi moshi = new Moshi.Builder().build();
 
   /**
-   * Represents a specific time block when a course meets.
-   * Contains the days of the week, start time, and end time.
+   * Represents a specific time block when a course meets. Contains the days of the week, start
+   * time, and end time.
    */
   public static class MeetingTime {
     /** Days of the week (0=Monday, 1=Tuesday, etc.) */
@@ -40,8 +39,8 @@ public class SchedulerUtils {
     }
 
     /**
-     * Checks if this meeting time conflicts with another meeting time.
-     * A conflict occurs when both times share at least one day and have overlapping time periods.
+     * Checks if this meeting time conflicts with another meeting time. A conflict occurs when both
+     * times share at least one day and have overlapping time periods.
      *
      * @param other The other meeting time to check against
      * @return true if there is a conflict, false otherwise
@@ -67,8 +66,8 @@ public class SchedulerUtils {
   }
 
   /**
-   * Parses meeting times from a course object.
-   * Extracts meeting days and times from the course's meetingTimes JSON string.
+   * Parses meeting times from a course object. Extracts meeting days and times from the course's
+   * meetingTimes JSON string.
    *
    * @param course Map representing a course with meetingTimes field
    * @return List of MeetingTime objects for the course
@@ -112,8 +111,8 @@ public class SchedulerUtils {
   }
 
   /**
-   * Converts a time string to minutes since midnight.
-   * Handles both 3-digit (e.g., "930") and 4-digit (e.g., "1430") time formats.
+   * Converts a time string to minutes since midnight. Handles both 3-digit (e.g., "930") and
+   * 4-digit (e.g., "1430") time formats.
    *
    * @param timeStr String representation of time (e.g., "1430" for 2:30pm)
    * @return Time in minutes since midnight
@@ -131,8 +130,8 @@ public class SchedulerUtils {
   }
 
   /**
-   * Checks if two courses have time conflicts.
-   * Two courses conflict if they have overlapping meeting times on the same day.
+   * Checks if two courses have time conflicts. Two courses conflict if they have overlapping
+   * meeting times on the same day.
    *
    * @param course1 First course to check
    * @param course2 Second course to check
@@ -154,9 +153,8 @@ public class SchedulerUtils {
   }
 
   /**
-   * Checks if prerequisites for a course have been satisfied.
-   * A course's prerequisites are satisfied if the student has taken at least one course
-   * from each prerequisite group.
+   * Checks if prerequisites for a course have been satisfied. A course's prerequisites are
+   * satisfied if the student has taken at least one course from each prerequisite group.
    *
    * @param courseObj Map representing a course with prereqGroups field
    * @param coursesTaken List of course codes the student has already taken
@@ -188,8 +186,8 @@ public class SchedulerUtils {
   }
 
   /**
-   * Parses meeting days from a meeting string.
-   * Handles special formatting like "Th" for Thursday and combined day strings.
+   * Parses meeting days from a meeting string. Handles special formatting like "Th" for Thursday
+   * and combined day strings.
    *
    * @param meetingString String representation of meeting days and times (e.g., "MWF 10-11:20a")
    * @return Set of day codes ("M", "T", "W", "Th", "F")
@@ -229,8 +227,8 @@ public class SchedulerUtils {
   }
 
   /**
-   * Checks if a time block is allowed based on the user's availability.
-   * If no time constraints are provided, all times are considered allowed.
+   * Checks if a time block is allowed based on the user's availability. If no time constraints are
+   * provided, all times are considered allowed.
    *
    * @param timeBlock The time block to check (e.g., "10-11:20a")
    * @param allowed Set of allowed time blocks

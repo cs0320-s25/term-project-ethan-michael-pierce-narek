@@ -148,10 +148,12 @@ public class UnitTesting {
     Map<String, Object> normal2 = makeCourse("MATH 0100", "MWF 1-1:50p", false);
     Map<String, Object> writCourse = makeCourse("ENGL 0900", "TTh 10:30-11:50a", true);
 
-    ScheduleGenerator.Schedule noWritSchedule = new ScheduleGenerator.Schedule(List.of(normal1, normal2));
+    ScheduleGenerator.Schedule noWritSchedule =
+        new ScheduleGenerator.Schedule(List.of(normal1, normal2));
     assertFalse(noWritSchedule.hasWRITCourse());
 
-    ScheduleGenerator.Schedule withWritSchedule = new ScheduleGenerator.Schedule(List.of(normal1, writCourse));
+    ScheduleGenerator.Schedule withWritSchedule =
+        new ScheduleGenerator.Schedule(List.of(normal1, writCourse));
     assertTrue(withWritSchedule.hasWRITCourse());
   }
 
@@ -204,7 +206,8 @@ public class UnitTesting {
 
     List<String> requiredCourses = List.of("CSCI 0320", "CSCI 0330", "MATH 0100");
 
-    ScheduleGenerator.Schedule schedule = new ScheduleGenerator.Schedule(List.of(req1, req2, elective));
+    ScheduleGenerator.Schedule schedule =
+        new ScheduleGenerator.Schedule(List.of(req1, req2, elective));
     assertEquals(2, schedule.countRequiredCourses(requiredCourses));
   }
 
@@ -214,18 +217,21 @@ public class UnitTesting {
     // Create courses with and without time conflicts
     Map<String, Object> morning = makeCourse("CSCI 0320", "MWF 10-10:50a", false);
     Map<String, Object> afternoon = makeCourse("MATH 0100", "MWF 1-1:50p", false);
-    Map<String, Object> conflicting = courseWithMeetingTimes(
-        "[{\"meet_day\":\"0\",\"start_time\":\"1000\",\"end_time\":\"1050\"},{\"meet_day\":\"2\",\"start_time\":\"1000\",\"end_time\":\"1050\"},{\"meet_day\":\"4\",\"start_time\":\"1000\",\"end_time\":\"1050\"}]");
+    Map<String, Object> conflicting =
+        courseWithMeetingTimes(
+            "[{\"meet_day\":\"0\",\"start_time\":\"1000\",\"end_time\":\"1050\"},{\"meet_day\":\"2\",\"start_time\":\"1000\",\"end_time\":\"1050\"},{\"meet_day\":\"4\",\"start_time\":\"1000\",\"end_time\":\"1050\"}]");
     conflicting.put("code", "PHYS 0070");
     conflicting.put("title", "Mock PHYS 0070");
     conflicting.put("meets", "MWF 10-10:50a");
     conflicting.put("writ", false);
     conflicting.put("srcdb", "202420");
 
-    ScheduleGenerator.Schedule noConflictSchedule = new ScheduleGenerator.Schedule(List.of(morning, afternoon));
+    ScheduleGenerator.Schedule noConflictSchedule =
+        new ScheduleGenerator.Schedule(List.of(morning, afternoon));
     assertFalse(noConflictSchedule.hasTimeConflicts());
 
-    ScheduleGenerator.Schedule withConflictSchedule = new ScheduleGenerator.Schedule(List.of(morning, conflicting));
+    ScheduleGenerator.Schedule withConflictSchedule =
+        new ScheduleGenerator.Schedule(List.of(morning, conflicting));
     assertTrue(withConflictSchedule.hasTimeConflicts());
   }
 

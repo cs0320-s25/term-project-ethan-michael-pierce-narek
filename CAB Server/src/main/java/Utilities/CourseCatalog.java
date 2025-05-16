@@ -8,24 +8,23 @@ import java.nio.file.Paths;
 import java.util.*;
 
 /**
- * Utility class that provides access to the Brown University course catalog.
- * This class loads course data from a JSON file and provides methods to query
- * course information efficiently. It serves as a central repository for all
- * course data used by the scheduling application.
+ * Utility class that provides access to the Brown University course catalog. This class loads
+ * course data from a JSON file and provides methods to query course information efficiently. It
+ * serves as a central repository for all course data used by the scheduling application.
  */
 public final class CourseCatalog {
 
   /**
-   * Map of course codes to course data objects.
-   * This provides quick lookup of course information by course code.
+   * Map of course codes to course data objects. This provides quick lookup of course information by
+   * course code.
    */
   private static final Map<String, Map<String, Object>> coursesByCode = new HashMap<>();
 
   /**
-   * Static initializer that loads the course catalog data when the class is first used.
-   * Reads course data from a JSON file, parses it, and stores it in memory for efficient access.
-   * If the data cannot be loaded, a RuntimeException is thrown which will prevent the application
-   * from starting with incomplete data.
+   * Static initializer that loads the course catalog data when the class is first used. Reads
+   * course data from a JSON file, parses it, and stores it in memory for efficient access. If the
+   * data cannot be loaded, a RuntimeException is thrown which will prevent the application from
+   * starting with incomplete data.
    */
   static {
     try {
@@ -53,11 +52,12 @@ public final class CourseCatalog {
   }
 
   /**
-   * Checks if a course has a WRIT designation.
-   * The WRIT designation indicates that a course satisfies Brown's writing requirement.
+   * Checks if a course has a WRIT designation. The WRIT designation indicates that a course
+   * satisfies Brown's writing requirement.
    *
    * @param code The course code to check (e.g., "CSCI 0320")
-   * @return true if the course has a WRIT designation, false otherwise or if the course is not found
+   * @return true if the course has a WRIT designation, false otherwise or if the course is not
+   *     found
    */
   public static boolean isWrit(String code) {
     Map<String, Object> course = coursesByCode.get(code);
