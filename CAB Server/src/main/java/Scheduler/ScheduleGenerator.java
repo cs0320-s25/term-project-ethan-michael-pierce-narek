@@ -120,7 +120,6 @@ public class ScheduleGenerator {
     }
   }
 
-  /** Constructor for ScheduleGenerator */
   public ScheduleGenerator(
       int classesPerSemester,
       List<String> coursesTaken,
@@ -164,7 +163,6 @@ public class ScheduleGenerator {
         this.courseMap.put((String) course.get("code"), course);
       }
     }
-    System.out.println("Loaded " + this.allCourses.size() + " courses for term " + term);
   }
 
   public void filterCourses(String term) throws Exception {
@@ -197,7 +195,6 @@ public class ScheduleGenerator {
           continue;
         }
 
-
         this.filteredCourses.add(course);
         continue;
       }
@@ -224,7 +221,6 @@ public class ScheduleGenerator {
       String humanTimeBlock = meets.split(" ", 2).length > 1 ? meets.split(" ", 2)[1] : "TBA";
       boolean timeAvailable = SchedulerUtils.isAllowedTime(humanTimeBlock, this.availableTimes);
 
-
       boolean prerequisitesMet = checkPrerequisites(courseCode);
 
       if (timeAvailable && prerequisitesMet) {
@@ -241,7 +237,6 @@ public class ScheduleGenerator {
     if (!this.needWRIT) {
       this.filteredCourses.removeIf(c -> Boolean.TRUE.equals(c.get("writ")));
     }
-
   }
 
   public boolean checkPrerequisites(String courseCode) {
@@ -263,8 +258,7 @@ public class ScheduleGenerator {
   }
 
   public Result generateSchedules(String term) throws Exception {
-    if (!this.errors.isEmpty())
-    return new Result(List.of(), this.errors);
+    if (!this.errors.isEmpty()) return new Result(List.of(), this.errors);
 
     errors.clear();
     List<String> missingPrereqs = verifyNecessaryCourses();
@@ -272,7 +266,6 @@ public class ScheduleGenerator {
       errors.add("Missing prerequisites for: " + String.join(", ", missingPrereqs));
       return new Result(List.of(), errors);
     }
-
 
     List<Map<String, Object>> necessaryCourseList = new ArrayList<>();
     for (String code : this.necessaryCourses) {
@@ -332,7 +325,6 @@ public class ScheduleGenerator {
     return new Result(top, errors);
   }
 
-
   private void buildSchedules(
       Schedule currentSchedule,
       List<Map<String, Object>> requiredOptions,
@@ -387,7 +379,6 @@ public class ScheduleGenerator {
       if (pool.isEmpty()) pool = electiveOptions;
     }
 
-
     for (Map<String, Object> course : pool) {
 
       Schedule next = new Schedule(new ArrayList<>(currentSchedule.courses));
@@ -406,12 +397,10 @@ public class ScheduleGenerator {
   private void calculateScheduleScore(Schedule schedule) {
     double score = 100.0;
 
-
     DayBalance actualBalance = schedule.getDayBalance();
     int mwfDiff = Math.abs(actualBalance.mwfCount - this.dayBalance.mwfCount);
     int tthDiff = Math.abs(actualBalance.tthCount - this.dayBalance.tthCount);
     score -= (mwfDiff + tthDiff) * 10;
-
 
     int requiredCount = schedule.countRequiredCourses(this.remainingRequired);
     int requiredDiff = Math.abs(requiredCount - this.requiredCoursesThisSemester);
@@ -421,7 +410,6 @@ public class ScheduleGenerator {
       for (Map<String, Object> course : schedule.courses) {
         String code = (String) course.get("code");
         String dept = code.split(" ")[0];
-
 
         if (this.remainingRequired.contains(code) || this.necessaryCourses.contains(code)) {
           continue;

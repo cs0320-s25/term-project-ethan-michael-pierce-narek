@@ -4,7 +4,6 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import java.util.*;
 
-
 public class SchedulerUtils {
 
   private static final Moshi moshi = new Moshi.Builder().build();
@@ -75,7 +74,6 @@ public class SchedulerUtils {
     return meetingTimes;
   }
 
-
   private static int parseTimeToMinutes(String timeStr) {
     if (timeStr == null || (timeStr.length() != 4 && timeStr.length() != 3)) {
       return 0;
@@ -83,7 +81,7 @@ public class SchedulerUtils {
     if (timeStr.length() == 3) {
       timeStr = "0" + timeStr;
     }
-    int hours  = Integer.parseInt(timeStr.substring(0, 2));
+    int hours = Integer.parseInt(timeStr.substring(0, 2));
     int minutes = Integer.parseInt(timeStr.substring(2, 4));
     return hours * 60 + minutes;
   }
