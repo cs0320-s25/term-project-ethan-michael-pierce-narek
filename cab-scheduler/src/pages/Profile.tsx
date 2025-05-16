@@ -14,6 +14,7 @@ interface UserMetadata {
   desiredCourses?: Course[];
   preferredTime?: string;
   modality?: string;
+  
 }
 
 // Predefined department list to avoid dynamic fetching
@@ -133,23 +134,27 @@ function Profile() {
   }, [user]);
 
   const saveMetadata = useCallback(async () => {
-    if (!user || isLoading) return;
-    const now = Date.now();
-    if (now - lastSavedTime < 1000) return;
-    setLastSavedTime(now);
+  if (!user || isLoading) return;
+  const now = Date.now();
+  if (now - lastSavedTime < 1000) return;
+  setLastSavedTime(now);
 
-    try {
-      await user.update({
-        unsafeMetadata: {
-          courses: selectedCoursesList,
-          desiredCourses: desiredCoursesList,
-        },
-      });
-      console.log("Saved metadata");
-    } catch (error) {
-      console.error("Error saving metadata:", error);
-    }
-  }, [user, isLoading, selectedCoursesList, desiredCoursesList, lastSavedTime]);
+  try {
+    // Get current metadata first
+    const currentMetadata = user.unsafeMetadata || {};
+    
+    await user.update({
+      unsafeMetadata: {
+        ...currentMetadata, // Preserve existing metadata
+        courses: selectedCoursesList,
+        desiredCourses: desiredCoursesList,
+      },
+    });
+    console.log("Saved metadata");
+  } catch (error) {
+    console.error("Error saving metadata:", error);
+  }
+}, [user, isLoading, selectedCoursesList, desiredCoursesList, lastSavedTime]);
 
   useEffect(() => {
     const timer = setTimeout(() => saveMetadata(), 500);

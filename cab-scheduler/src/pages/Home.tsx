@@ -9,6 +9,7 @@ function Home() {
   const [requiredClasses, setRequiredClasses] = useState<string[]>([]);
   const [electiveDepartments, setElectiveDepartments] = useState<string[]>([]);
   const [needsWrit, setNeedsWrit] = useState<boolean>(false);
+  const [NumberDesiredClasses, setNumberDesiredClasses] = useState<number>(3);
   const [hasLoadedMetadata, setHasLoadedMetadata] = useState(false);
 
 
@@ -23,6 +24,7 @@ function Home() {
         requiredClasses?: string[];
         electiveDepartments?: string[];
         needsWrit?: boolean;
+        NumberDesiredClasses?: number;
       };
 
       setExcludedClasses(metadata.excludedClasses ?? []);
@@ -39,20 +41,29 @@ function Home() {
   const saveTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const saveMetadata = async () => {
-    if (user) {
+  if (user) {
+    try {
+      // Get current metadata first
+      const currentMetadata = user.unsafeMetadata || {};
+      
       await user.update({
         unsafeMetadata: {
+          ...currentMetadata, // Preserve existing metadata
           excludedClasses,
           totalClasses,
           mwfClasses,
           requiredClasses,
           electiveDepartments,
           needsWrit,
+          NumberDesiredClasses
         },
       });
       console.log("Clerk metadata saved");
+    } catch (error) {
+      console.error("Error saving metadata:", error);
     }
-  };
+  }
+};
 
 // Autosave on input change — only after metadata has been loaded
   useEffect(() => {
@@ -68,57 +79,58 @@ function Home() {
     requiredClasses,
     electiveDepartments,
     needsWrit,
-    hasLoadedMetadata
+    hasLoadedMetadata,
+    NumberDesiredClasses
   ]);
 
   const tthClasses = totalClasses - mwfClasses;
 
   const dayOptions = {
     Monday: [
-      "MWF 8-8:50a",
-      "MWF 9-9:50a",
-      "MWF 10-10:50a",
-      "MWF 11-11:50a",
-      "MWF 12-12:50p",
-      "MWF 1-1:50p",
-      "MWF 2-2:50p",
-      "M 3-5:30p",
+      "8-8:50a",
+      "9-9:50a",
+      "10-10:50a",
+      "11-11:50a",
+      "12-12:50p",
+      "1-1:50p",
+      "2-2:50p",
+      "3-5:30p",
     ],
     Tuesday: [
-      "TTh 9-10:20a",
-      "TTh 10:30-11:50a",
-      "TTh 1-2:20p",
-      "TTh 2:30-3:50p",
-      "TTh 6:40-8p",
-      "T 4-6:30p",
+      "9-10:20a",
+      "10:30-11:50a",
+      "1-2:20p",
+      "2:30-3:50p",
+      "6:40-8p",
+      "4-6:30p",
     ],
     Wednesday: [
-      "MWF 8-8:50a",
-      "MWF 9-9:50a",
-      "MWF 10-10:50a",
-      "MWF 11-11:50a",
-      "MWF 12-12:50p",
-      "MWF 1-1:50p",
-      "MWF 2-2:50p",
-      "W 3-5:30p",
+      "8-8:50a",
+      "9-9:50a",
+      "10-10:50a",
+      "11-11:50a",
+      "12-12:50p",
+      "1-1:50p",
+      "2-2:50p",
+      "3-5:30p",
     ],
     Thursday: [
-      "TTh 9-10:20a",
-      "TTh 10:30-11:50a",
-      "TTh 1-2:20p",
-      "TTh 2:30-3:50p",
-      "TTh 6:40-8p",
-      "Th 4-6:30p",
+      "9-10:20a",
+      "10:30-11:50a",
+      "1-2:20p",
+      "2:30-3:50p",
+      "6:40-8p",
+      "4-6:30p",
     ],
     Friday: [
-      "MWF 8-8:50a",
-      "MWF 9-9:50a",
-      "MWF 10-10:50a",
-      "MWF 11-11:50a",
-      "MWF 12-12:50p",
-      "MWF 1-1:50p",
-      "MWF 2-2:50p",
-      "F 3-5:30p",
+      "8-8:50a",
+      "9-9:50a",
+      "10-10:50a",
+      "11-11:50a",
+      "12-12:50p",
+      "1-1:50p",
+      "2-2:50p",
+      "3-5:30p",
     ],
   };
 
@@ -169,7 +181,9 @@ function Home() {
                   {[1, 2, 3, 4, 5].map((num) => (
                     <button
                       key={num}
-                      className={`number-option ${totalClasses === num ? "selected" : ""}`}
+                      className={`number-option ${
+                        totalClasses === num ? "selected" : ""
+                      }`}
                       onClick={() => setTotalClasses(num)}
                     >
                       {num}
@@ -212,7 +226,7 @@ function Home() {
 
             {/* Exclude Class Times */}
             <div className="preferences-card">
-              <h2 className="section-title">Exclude Class Times</h2>
+              <h2 className="section-title">Include Class Times</h2>
               <div className="day-dropdowns-grid">
                 {Object.keys(dayOptions).map((day) => (
                   <div key={day} className="day-preference">
@@ -230,7 +244,7 @@ function Home() {
                           <option key={option} value={option}>
                             {option}
                           </option>
-                        ),
+                        )
                       )}
                     </select>
                   </div>
@@ -269,7 +283,7 @@ function Home() {
                     <button
                       onClick={() =>
                         setRequiredClasses(
-                          requiredClasses.filter((_, i) => i !== idx),
+                          requiredClasses.filter((_, i) => i !== idx)
                         )
                       }
                       className="remove-tag"
@@ -279,6 +293,23 @@ function Home() {
                   </span>
                 ))}
               </div>
+            </div>
+
+            <div className="preferences-card">
+              <h2 className="section-title">Desired Number of Classes</h2>
+              <label htmlFor="desired-classes-input">
+                Input how many desired classes you would like to take this
+                semester:
+              </label>
+              <input
+                id="desired-classes-input"
+                type="number"
+                min="1"
+                max="8"
+                value={NumberDesiredClasses}
+                onChange={(e) => setNumberDesiredClasses(parseInt(e.target.value))}
+                className="number-input"
+              />
             </div>
 
             {/* Elective Departments */}
@@ -385,7 +416,7 @@ function Home() {
                     <button
                       onClick={() =>
                         setElectiveDepartments(
-                          electiveDepartments.filter((_, i) => i !== idx),
+                          electiveDepartments.filter((_, i) => i !== idx)
                         )
                       }
                       className="remove-tag"

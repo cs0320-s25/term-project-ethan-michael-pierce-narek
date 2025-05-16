@@ -1,145 +1,191 @@
-import { useState } from "react";
-import { useUser, useAuth } from "@clerk/clerk-react";
+import { useState, useEffect } from "react";
+import { useUser } from "@clerk/clerk-react";
 import "./schedule.css";
 
-function Schedule() {
-  const [concentration, setConcentration] = useState("");
-  const [requirements, setRequirements] = useState("");
-  const [numCourses, setNumCourses] = useState(4);
-  const [generated, setGenerated] = useState(false);
-  const { user } = useUser();
+interface Course {
+  code: string;
+  title: string;
+  meets: string;
+  writ: boolean;
+}
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await fetch(
-        `http://localhost:3232/generateschedule?user=${user?.id}`,
-      );
-      const unsafeMetadata = await response.json();
-      console.log("Unsafe Metadata:", unsafeMetadata);
-      setGenerated(true);
-    } catch (error) {
-      console.error("Error:", error);
+interface Schedule {
+  score: number;
+  courses: Course[];
+}
+
+function Schedule() {
+  const { user } = useUser();
+  const [isLoading, setIsLoading] = useState(false);
+  const [schedules, setSchedules] = useState<Schedule[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  const [mwfClasses, setMwfClasses] = useState<number>(2);
+  const [totalClasses, setTotalClasses] = useState<number>(4);
+  const [excludedClasses, setExcludedClasses] = useState<string[]>([]);
+  const [requiredClasses, setRequiredClasses] = useState<string[]>([]);
+  const [electiveDepartments, setElectiveDepartments] = useState<string[]>([]);
+  const [needsWrit, setNeedsWrit] = useState<boolean>(false);
+  const [NumberDesiredCourses, setNumberDesiredCourses] = useState<number>(3);
+  const [hasLoadedMetadata, setHasLoadedMetadata] = useState(false);
+
+  useEffect(() => {
+    if (user && !hasLoadedMetadata) {
+      const loadMetadata = async () => {
+        try {
+          const metadata = user.unsafeMetadata as {
+            excludedClasses?: string[];
+            totalClasses?: number;
+            mwfClasses?: number;
+            requiredClasses?: string[];
+            electiveDepartments?: string[];
+            needsWrit?: boolean;
+            NumberDesiredCourses?: number;
+          };
+
+          setExcludedClasses(metadata.excludedClasses || []);
+          setTotalClasses(metadata.totalClasses || 4);
+          setMwfClasses(metadata.mwfClasses || 2);
+          setRequiredClasses(metadata.requiredClasses || []);
+          setElectiveDepartments(metadata.electiveDepartments || []);
+          setNeedsWrit(metadata.needsWrit || false);
+          setNumberDesiredCourses(metadata.NumberDesiredCourses || 3);
+          setHasLoadedMetadata(true);
+        } catch (error) {
+          console.error("Error loading metadata:", error);
+          setError("Failed to load your preferences");
+        }
+      };
+
+      loadMetadata();
     }
+  }, [user, hasLoadedMetadata]);
+
+const generateSchedules = async () => {
+  if (!user || !hasLoadedMetadata) return;
+
+  setIsLoading(true);
+  setError(null);
+
+  try {
+    // Times are already in correct format (e.g. "9-9:50")
+    const excludedTimes = excludedClasses
+      .filter((time) => time) // Remove empty strings
+      .join(",");
+
+    // Days should be all weekdays since we're not tracking specific days anymore
+    const days = "M,T,W,Th,F";
+
+    // Format departments without spaces
+    const depts = electiveDepartments
+      .map((dept) => dept.trim())
+      .filter((dept) => dept) // Remove empty strings
+      .join(",");
+
+    // Log each parameter for debugging
+    console.log("Parameters:");
+    console.log("term:", "202420");
+    console.log("classes:", totalClasses);
+    console.log("user:", user.id);
+    console.log("needed:", requiredClasses.join(","));
+    console.log("times:", excludedTimes);
+    console.log("days:", days);
+    console.log("mwf:", mwfClasses);
+    console.log("tth:", totalClasses - mwfClasses);
+    console.log("reqThisSem:", NumberDesiredCourses);
+    console.log("depts:", depts);
+    console.log("writ:", needsWrit);
+
+    // Manually construct the URL
+    const url = `http://localhost:3232/generate?term=202420&classes=${totalClasses}&user=${
+      user.id
+    }&needed=${requiredClasses.join(
+      ","
+    )}&times=${excludedTimes}&days=${days}&mwf=${mwfClasses}&tth=${
+      totalClasses - mwfClasses
+    }&reqThisSem=${NumberDesiredCourses}&depts=${depts}&writ=${needsWrit}`;
+
+    console.log("Generated URL:", url);
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    setSchedules(data.schedules?.slice(0, 3) || []);
+  } catch (err) {
+    console.error("Error generating schedules:", err);
+    setError(
+      err instanceof Error ? err.message : "Failed to generate schedules"
+    );
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+  const refreshSchedules = () => {
+    setSchedules([]);
+    setHasLoadedMetadata(false);
   };
 
-  const mockSchedule = [
-    { name: "CSCI0320", day: "Mon", time: "10:00AM" },
-    { name: "MATH0100", day: "Tue", time: "11:00AM" },
-    { name: "PHIL0200", day: "Wed", time: "1:00PM" },
-    { name: "HIST0450", day: "Thu", time: "2:00PM" },
-  ];
-
   return (
-    <div className="schedule-page fade-in">
-      <div className="scheduler-container">
-        <h1>Mock Scheduler</h1>
+    <div className="schedule-container">
+      <h1 className="schedule-title">Generate Your Schedule</h1>
 
-        {!generated ? (
-          <form className="scheduler-form fade-in" onSubmit={handleSubmit}>
-            <div style={{ marginBottom: "1.5rem" }}>
-              <label htmlFor="concentration">Concentration:</label>
-              <br />
-              <input
-                type="text"
-                id="concentration"
-                value={concentration}
-                onChange={(e) => setConcentration(e.target.value)}
-                placeholder="e.g., Computer Science"
-              />
-            </div>
+      <div className="schedule-controls">
+        <button
+          onClick={generateSchedules}
+          disabled={isLoading}
+          className="generate-btn"
+        >
+          {isLoading ? "Generating..." : "Generate Schedules"}
+        </button>
 
-            <div style={{ marginBottom: "1.5rem" }}>
-              <label htmlFor="requirements">
-                Requirements (comma-separated):
-              </label>
-              <br />
-              <input
-                type="text"
-                id="requirements"
-                value={requirements}
-                onChange={(e) => setRequirements(e.target.value)}
-                placeholder="e.g., CSCI0320, MATH0100"
-              />
-            </div>
-
-            <div style={{ marginBottom: "1.5rem" }}>
-              <label>Number of Courses:</label>
-              <br />
-              <label>
-                <input
-                  type="radio"
-                  value={3}
-                  checked={numCourses === 3}
-                  onChange={() => setNumCourses(3)}
-                />{" "}
-                3
-              </label>{" "}
-              <label>
-                <input
-                  type="radio"
-                  value={4}
-                  checked={numCourses === 4}
-                  onChange={() => setNumCourses(4)}
-                />{" "}
-                4
-              </label>{" "}
-              <label>
-                <input
-                  type="radio"
-                  value={5}
-                  checked={numCourses === 5}
-                  onChange={() => setNumCourses(5)}
-                />{" "}
-                5
-              </label>
-            </div>
-
-            <button type="submit">Build Schedule</button>
-          </form>
-        ) : (
-          <div style={{ marginTop: "2rem" }}>
-            <h2>Your Generated Schedule</h2>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(5, 1fr)",
-                gap: "1rem",
-                marginTop: "2rem",
-              }}
-            >
-              {["Mon", "Tue", "Wed", "Thu", "Fri"].map((day) => (
-                <div
-                  key={day}
-                  style={{
-                    backgroundColor: "#fff",
-                    padding: "1rem",
-                    border: "1px solid #eee",
-                    borderRadius: "8px",
-                    minHeight: "180px",
-                  }}
-                >
-                  <h3 style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
-                    {day}
-                  </h3>
-                  {mockSchedule
-                    .filter((c) => c.day === day)
-                    .map((course) => (
-                      <div
-                        key={course.name}
-                        style={{ marginBottom: "0.5rem", textAlign: "center" }}
-                      >
-                        <strong>{course.name}</strong>
-                        <br />
-                        <small>{course.time}</small>
-                      </div>
-                    ))}
-                </div>
-              ))}
-            </div>
-          </div>
+        {schedules.length > 0 && (
+          <button onClick={refreshSchedules} className="refresh-btn">
+            Refresh
+          </button>
         )}
       </div>
+
+      {error && <p className="error-message">{error}</p>}
+
+      {schedules.length > 0 && (
+        <div className="schedules-grid">
+          <h2>Top Schedule Options</h2>
+          {schedules.map((schedule, index) => (
+            <div key={index} className="schedule-card">
+              <h3>Schedule Option #{index + 1}</h3>
+              <div className="schedule-details">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Course</th>
+                      <th>Title</th>
+                      <th>Time</th>
+                      <th>Type</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {schedule.courses.map((course, idx) => (
+                      <tr key={idx}>
+                        <td className="course-code">{course.code}</td>
+                        <td className="course-title">{course.title}</td>
+                        <td className="course-time">{course.meets}</td>
+                        <td className="course-type">
+                          {course.writ ? "WRIT" : "Regular"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
