@@ -1,8 +1,8 @@
-import com.squareup.moshi.JsonAdapter;
+package Utilities;
+
 import com.squareup.moshi.Moshi;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.NoSuchFileException;
 
 public class FormatCourses {
   public static void main(String[] args) {
@@ -13,10 +13,9 @@ public class FormatCourses {
 
       // Verify input file exists
       if (!Files.exists(Paths.get(inputPath))) {
-        System.err.println("Error: Input file not found at " +
-            Paths.get(inputPath).toAbsolutePath());
-        System.err.println("Current working directory: " +
-            System.getProperty("user.dir"));
+        System.err.println(
+            "Error: Input file not found at " + Paths.get(inputPath).toAbsolutePath());
+        System.err.println("Current working directory: " + System.getProperty("user.dir"));
         return;
       }
 
@@ -28,8 +27,8 @@ public class FormatCourses {
       if (parsed != null) {
         String pretty = moshi.adapter(Object.class).indent("  ").toJson(parsed);
         Files.writeString(Paths.get(outputPath), pretty);
-        System.out.println("Successfully formatted JSON to " +
-            Paths.get(outputPath).toAbsolutePath());
+        System.out.println(
+            "Successfully formatted JSON to " + Paths.get(outputPath).toAbsolutePath());
       }
     } catch (Exception e) {
       System.err.println("Error processing JSON: " + e.getMessage());
