@@ -1,7 +1,6 @@
 import static spark.Spark.after;
 import static spark.Spark.options;
 
-import Handlers.FilterHandler;
 import Handlers.ScheduleHandler;
 import spark.Spark;
 
@@ -32,7 +31,6 @@ public final class Server {
 
     // Schedule generation endpoint
     Spark.get("/generate", new ScheduleHandler());
-    Spark.get("/filter", new FilterHandler());
 
     Spark.init();
     Spark.awaitInitialization();
