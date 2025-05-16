@@ -40,7 +40,7 @@ export const DesiredCourses: React.FC<DesiredCoursesProps> = ({
     const courseCode = e.target.value;
     if (courseCode && selectedDepartment) {
       const course = departmentCourses[selectedDepartment]?.find(
-        (c) => c.code === courseCode
+        (c) => c.code === courseCode,
       );
       if (course && !courses.some((c) => c.code === course.code)) {
         onAddCourse(course);
