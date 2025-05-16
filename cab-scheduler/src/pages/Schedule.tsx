@@ -40,7 +40,7 @@ function Schedule() {
             requiredClasses?: string[];
             electiveDepartments?: string[];
             needsWrit?: boolean;
-            NumberDesiredCourses?: number;
+            NumberDesiredClasses?: number;
           };
 
           setExcludedClasses(metadata.excludedClasses || []);
@@ -49,7 +49,7 @@ function Schedule() {
           setRequiredClasses(metadata.requiredClasses || []);
           setElectiveDepartments(metadata.electiveDepartments || []);
           setNeedsWrit(metadata.needsWrit || false);
-          setNumberDesiredCourses(metadata.NumberDesiredCourses || 3);
+          setNumberDesiredCourses(metadata.NumberDesiredClasses || 3);
           setHasLoadedMetadata(true);
         } catch (error) {
           console.error("Error loading metadata:", error);
@@ -68,55 +68,43 @@ const generateSchedules = async () => {
   setError(null);
 
   try {
-    // Times are already in correct format (e.g. "9-9:50")
-    const excludedTimes = excludedClasses
-      .filter((time) => time) // Remove empty strings
-      .join(",");
-
-    // Days should be all weekdays since we're not tracking specific days anymore
+    const excludedTimes = excludedClasses.filter((t) => t).join(",");
     const days = "M,T,W,Th,F";
-
-    // Format departments without spaces
     const depts = electiveDepartments
-      .map((dept) => dept.trim())
-      .filter((dept) => dept) // Remove empty strings
+      .map((d) => d.trim())
+      .filter((d) => d)
       .join(",");
+    const url =
+      `http://localhost:3232/generate?term=202420&classes=${totalClasses}` +
+      `&user=${user.id}` +
+      `&needed=${requiredClasses.join(",")}` +
+      `&times=${excludedTimes}` +
+      `&days=${days}` +
+      `&mwf=${mwfClasses}` +
+      `&tth=${totalClasses - mwfClasses}` +
+      `&reqThisSem=${NumberDesiredCourses}` +
+      `&depts=${depts}` +
+      `&writ=${needsWrit}`;
 
-    // Log each parameter for debugging
-    console.log("Parameters:");
-    console.log("term:", "202420");
-    console.log("classes:", totalClasses);
-    console.log("user:", user.id);
-    console.log("needed:", requiredClasses.join(","));
-    console.log("times:", excludedTimes);
-    console.log("days:", days);
-    console.log("mwf:", mwfClasses);
-    console.log("tth:", totalClasses - mwfClasses);
-    console.log("reqThisSem:", NumberDesiredCourses);
-    console.log("depts:", depts);
-    console.log("writ:", needsWrit);
-
-    // Manually construct the URL
-    const url = `http://localhost:3232/generate?term=202420&classes=${totalClasses}&user=${
-      user.id
-    }&needed=${requiredClasses.join(
-      ","
-    )}&times=${excludedTimes}&days=${days}&mwf=${mwfClasses}&tth=${
-      totalClasses - mwfClasses
-    }&reqThisSem=${NumberDesiredCourses}&depts=${depts}&writ=${needsWrit}`;
-
-    console.log("Generated URL:", url);
+    console.log("💬 Fetching schedules from:", url);
 
     const response = await fetch(url);
+    const data = await response.json(); 
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    if (data.success === false) {
+      const msg = Array.isArray(data.errors)
+        ? data.errors.join("; ")
+        : "Server returned an error";
+      setError(msg);
+      setSchedules([]); 
+      setIsLoading(false);
+      return;
     }
 
-    const data = await response.json();
-    setSchedules(data.schedules?.slice(0, 3) || []);
+    setSchedules(
+      Array.isArray(data.schedules) ? data.schedules.slice(0, 3) : []
+    );
   } catch (err) {
-    console.error("Error generating schedules:", err);
     setError(
       err instanceof Error ? err.message : "Failed to generate schedules"
     );

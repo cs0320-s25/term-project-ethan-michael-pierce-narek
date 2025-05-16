@@ -33,6 +33,7 @@ function Home() {
       setRequiredClasses(metadata.requiredClasses ?? []);
       setElectiveDepartments(metadata.electiveDepartments ?? []);
       setNeedsWrit(metadata.needsWrit ?? false);
+      setNumberDesiredClasses(metadata.NumberDesiredClasses ?? 3);
       setHasLoadedMetadata(true);
     }
   }, [user, hasLoadedMetadata]);
